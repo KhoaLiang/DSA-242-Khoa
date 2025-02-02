@@ -8,6 +8,7 @@
 
 using namespace std;
 
+#define MAX 100
 // Function to print the elements of an array
 void printArray(int arr[], int size) {
     for (int i = 0; i < size; i++) {
@@ -101,7 +102,7 @@ int firstPosition(int arr[], int size, int valueToBeFind){
             return i;
         }
     }
-    return -1;
+    return 0;
 }
 bool isMountainArray(int arr[], int size) {
     if(size < 3) return false;
@@ -135,6 +136,81 @@ bool isMountainArray(int arr[], int size) {
     }
 
     return true; 
+}
+int findMaxSumSubarray(int arr[], int size, int k) {
+    // if size < k:
+    //     return -1
+    if(size < k || size == 0) return 0;
+    // max_sum = sum of first k elements
+    // window_sum = max_sum
+    int max_sum = 0;
+    int window_sum = 0;
+    for (int i = 0; i < k; i++)
+    {
+        max_sum += arr[i];
+    }
+    window_sum = max_sum;
+    // for i from k to size - 1:
+    //     window_sum = window_sum + arr[i] - arr[i - k]
+    //     if window_sum > max_sum:
+    //         max_sum = window_sum
+
+    // return max_sum
+    for (int i = k; i < size; i++)
+    {
+        window_sum = window_sum + arr[i] - arr[i - k];
+        if (window_sum > max_sum)
+        {
+            max_sum = window_sum;
+        }
+    }
+    return max_sum;
+    
+    
+}
+// Function to perform DFS and calculate the area of an island
+int dfs(int grid[][MAX], int x, int y, int n, int m, vector<vector<bool>>& visited) {
+    // Check for out of bounds or if the cell is water or already visited
+    if (x < 0 || x >= n || y < 0 || y >= m || grid[x][y] == 0 || visited[x][y]) {
+        return 0;
+    }
+
+    // Mark the cell as visited
+    visited[x][y] = true;
+
+    // Initialize area
+    int area = 1;
+
+    // Explore all four directions (up, down, left, right)
+    area += dfs(grid, x + 1, y, n, m, visited);
+    area += dfs(grid, x - 1, y, n, m, visited);
+    area += dfs(grid, x, y + 1, n, m, visited);
+    area += dfs(grid, x, y - 1, n, m, visited);
+
+    return area;
+}
+
+int maxAreaOfIsland(int grid[][MAX], int n, int m) {
+    // Initialize visited array
+    vector<vector<bool>> visited(n, vector<bool>(m, false));
+
+    int max_area = 0;
+
+    // Iterate through each cell in the grid
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            // If the cell is land and not visited, perform DFS
+            if (grid[i][j] == 1 && !visited[i][j]) {
+                int area = dfs(grid, i, j, n, m, visited);
+                max_area = max(max_area, area);
+            }
+        }
+    }
+
+    return max_area;
+}
+int numberOfClosedIslands(int grid[][MAX], int n, int m) {
+    return 1;
 }
 int main() {
     // //missing number test
@@ -188,14 +264,63 @@ int main() {
     // //! output ----------------------------------
     // stringstream output;
     // output << result;
-    //mountainArray bool function
+    // //mountainArray bool function
+    // //! data ------------------------------------
+    // int arr[] = {0, 1, 2, 3, 4, 9, 8, 7, 6, 5};
+    // int size = 10;
+    // int result = isMountainArray(arr, size);
+
+    // //! expect ----------------------------------
+    // string expect = "1";
+
+    // //! output ----------------------------------
+    // stringstream output;
+    // output << result;
+    // //find max sum of sub array
+    // //! data ------------------------------------
+    // int arr[] = {1, 2, 3, 4, 5, 6};
+    // int size = 6;
+    // int k = 3;
+    // int result = findMaxSumSubarray(arr, size, k);
+
+    // //! expect ----------------------------------
+    // string expect = "15";
+
+    // //! output ----------------------------------
+    // stringstream output;
+    // output << result;
+    //max area of islands
+    // //! data ------------------------------------
+    // int grid[MAX][MAX] = {
+    //     {0, 1, 0, 0}, 
+    //     {1, 1, 1, 0}, 
+    //     {0, 0, 0, 0}, 
+    //     {1, 0, 0, 0}
+    // };
+    // int n = 4, m = 4;
+
+    // int result = maxAreaOfIsland(grid, n, m);
+
+    // //! expect ----------------------------------
+    // string expect = "4";
+
+    // //! output ----------------------------------
+    // stringstream output;
+    // output << result;
+
+    //number of closed island
     //! data ------------------------------------
-    int arr[] = {0, 1, 2, 3, 4, 9, 8, 7, 6, 5};
-    int size = 10;
-    int result = isMountainArray(arr, size);
+    int grid[MAX][MAX] = {
+        {1, 1, 1, 1, 0},
+        {1, 0, 0, 1, 0},
+        {1, 1, 1, 1, 0},
+        {0, 0, 0, 0, 0}};
+    int n = 4, m = 5;
+
+    int result = numberOfClosedIslands(grid, n, m);
 
     //! expect ----------------------------------
-    string expect = "1";
+    string expect = "0";
 
     //! output ----------------------------------
     stringstream output;
