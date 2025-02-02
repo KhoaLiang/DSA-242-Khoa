@@ -80,6 +80,19 @@ int findSecondSmallest(int arr[], int size) {
     }
     return Min;
 }
+int maxSubArray(int nums[], int size) {
+    int max_current = nums[0];
+    int max_global = nums[0];
+
+    for (int i = 1; i < size; i++) {
+        max_current = max(nums[i], max_current + nums[i]);
+        if (max_current > max_global) {
+            max_global = max_current;
+        }
+    }
+
+    return max_global;
+}
 int main() {
     // //missing number test
     // //! data ------------------------------------
@@ -107,14 +120,27 @@ int main() {
     // stringstream output;
     // output << result;
 
-    //second smallest
+    // //second smallest
+    // //! data ------------------------------------
+    // int arr[] = {4, 1, 3, 2};
+    // int size = 4;
+    // int result = findSecondSmallest(arr, size);
+
+    // //! expect ----------------------------------
+    // string expect = "2";
+
+    // //! output ----------------------------------
+    // stringstream output;
+    // output << result;
+
+    //maxSubArray
     //! data ------------------------------------
-    int arr[] = {4, 1, 3, 2};
-    int size = 4;
-    int result = findSecondSmallest(arr, size);
+    int arr[] = {5, 4, -1, 7, 8};
+    int size = 5;
+    int result = maxSubArray(arr, size);
 
     //! expect ----------------------------------
-    string expect = "2";
+    string expect = "-1";
 
     //! output ----------------------------------
     stringstream output;
