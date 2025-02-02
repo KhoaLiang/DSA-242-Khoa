@@ -93,6 +93,49 @@ int maxSubArray(int nums[], int size) {
 
     return max_global;
 }
+int firstPosition(int arr[], int size, int valueToBeFind){
+    for (int i = 0; i < size; i++)
+    {
+        if (valueToBeFind == arr[i])
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+bool isMountainArray(int arr[], int size) {
+    if(size < 3) return false;
+    int max = arr[0];
+    //loop to find the peak of the array(max)
+    for (int i = 0; i < size; i++)
+    {
+        if (max < arr[i])
+        {
+            max = arr[i];
+        }
+    }
+    if (max == arr[0] || max == arr[size - 1]) {
+        return false;
+    }
+
+    int peakOfMountain = firstPosition(arr, size, max);
+
+    // Check if the values before the peak are strictly increasing
+    for (int i = 0; i < peakOfMountain; i++) {
+        if (arr[i] >= arr[i + 1]) {
+            return false;
+        }
+    }
+
+    // Check if the values after the peak are strictly decreasing
+    for (int i = peakOfMountain; i < size - 1; i++) {
+        if (arr[i] <= arr[i + 1]) {
+            return false;
+        }
+    }
+
+    return true; 
+}
 int main() {
     // //missing number test
     // //! data ------------------------------------
@@ -133,14 +176,26 @@ int main() {
     // stringstream output;
     // output << result;
 
-    //maxSubArray
+    // //maxSubArray
+    // //! data ------------------------------------
+    // int arr[] = {5, 4, -1, 7, 8};
+    // int size = 5;
+    // int result = maxSubArray(arr, size);
+
+    // //! expect ----------------------------------
+    // string expect = "-1";
+
+    // //! output ----------------------------------
+    // stringstream output;
+    // output << result;
+    //mountainArray bool function
     //! data ------------------------------------
-    int arr[] = {5, 4, -1, 7, 8};
-    int size = 5;
-    int result = maxSubArray(arr, size);
+    int arr[] = {0, 1, 2, 3, 4, 9, 8, 7, 6, 5};
+    int size = 10;
+    int result = isMountainArray(arr, size);
 
     //! expect ----------------------------------
-    string expect = "-1";
+    string expect = "1";
 
     //! output ----------------------------------
     stringstream output;
