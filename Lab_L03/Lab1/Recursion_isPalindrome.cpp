@@ -4,30 +4,34 @@ using namespace std;
 
 bool isPalindromeHelper(string str, int start, int end) {
     // If start is greater than or equal to end:
-    //     Return true
-    // If str[start] is not equal to str[end]:
-    //     Return false
-    // Call isPalindromeHelper with start + 1 and end - 1
-    if (start >= end)
-    {
+    if (start >= end) {
         return true;
     }
-    if (str[start] != str[end])
-    {
+    // If str[start] is not equal to str[end]:
+    if (str[start] != str[end]) {
         return false;
     }
+    // Call isPalindromeHelper with start + 1 and end - 1
     return isPalindromeHelper(str, start + 1, end - 1);
 }
 
-bool isPalindrome(string str) {
-    // Remove spaces from the string
-    string cleanedStr;
-    for (char c : str) {
-        if (c != ' ') {
-            cleanedStr += c;
-        }
+string removeSpaces(string str, string::size_type index = 0) {
+    // Base case: if index reaches the end of the string
+    if (index == str.length()) {
+        return "";
     }
-    // Call isPalindromeHelper with the cleaned string, start index 0, and end index str.length() - 1
+    // Recursive case: if the current character is not a space, include it in the result
+    if (str[index] != ' ') {
+        return str[index] + removeSpaces(str, index + 1);
+    }
+    // Recursive case: if the current character is a space, skip it
+    return removeSpaces(str, index + 1);
+}
+
+bool isPalindrome(string str) {
+    // Remove spaces from the string using the recursive function
+    string cleanedStr = removeSpaces(str);
+    // Call isPalindromeHelper with the cleaned string, start index 0, and end index cleanedStr.length() - 1
     return isPalindromeHelper(cleanedStr, 0, cleanedStr.length() - 1);
 }
 int main() {
