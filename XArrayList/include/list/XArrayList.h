@@ -183,6 +183,17 @@ XArrayList<T>::XArrayList(
     int capacity)
 {
     // TODO
+    // // Step 1: Initialize Member Variables
+    // this.capacity = capacity
+    // this.count = 0
+    // this.deleteUserData = deleteUserData
+    // this.itemEqual = itemEqual
+
+    // // Step 2: Allocate Memory for the Dynamic Array
+    // try
+    //     this.data = allocate memory for an array of size this.capacity
+    // catch memory allocation failure
+    //     handle the exception (e.g., throw an exception or handle the error)
 }
 
 template <class T>
