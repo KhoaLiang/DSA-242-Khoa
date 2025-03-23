@@ -256,12 +256,58 @@ template <class T>
 XArrayList<T>::XArrayList(const XArrayList<T> &list)
 {
     // TODO
+    // Step 1: Initialize Member Variables
+    this->capacity = list.capacity;
+    this->count = list.count;
+    this->deleteUserData = list.deleteUserData;
+    this->itemEqual = list.itemEqual;
+
+    // Step 2: Allocate Memory for the Dynamic Array
+    try
+    {
+        this->data = new T[this->capacity];
+    }
+    catch (const std::bad_alloc &e)
+    {
+        std::cerr << "Memory allocation failed: " << e.what() << '\n';
+        throw; // Re-throw the exception to indicate failure
+    }
+
+    // Step 3: Copy Elements from the Source List
+    for (int i = 0; i < count; i++)
+    {
+        this->data[i] = list.data[i];
+    }
 }
 
 template <class T>
 XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 {
     // TODO
+    if (this != &list) // Check for self-assignment
+    {
+        this->capacity = list.capacity;
+        this->count = list.count;
+        this->deleteUserData = list.deleteUserData;
+        this->itemEqual = list.itemEqual;
+        T* new_data = nullptr;
+        try
+        {
+            new_data = new T[this->capacity];
+        }
+        catch (const std::bad_alloc &e)
+        {
+            std::cerr << "Memory allocation failed: " << e.what() << '\n';
+            throw; // Re-throw the exception to indicate failure
+        }
+        for (int i = 0; i < count; i++)
+        {
+            new_data[i] = list.data[i];
+        }
+        delete[] data;
+        data = new_data;
+    }
+    return *this;
 }
 
 template <class T>
@@ -274,6 +320,13 @@ template <class T>
 void XArrayList<T>::add(T e)
 {
     // TODO
+    if (count == capacity)
+    {
+        /* code */
+        ensureCapacity(capacity);
+    }
+    data[count] = e;
+    count++;
 }
 
 template <class T>
@@ -407,17 +460,42 @@ void XArrayList<T>::checkIndex(int index)
      * Ensures safe access to the list's elements by preventing invalid index operations.
      */
     // TODO
+    if (index < 0 || index > count)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
 }
 template <class T>
 void XArrayList<T>::ensureCapacity(int index)
 {
     /**
      * Ensures that the list has enough capacity to accommodate the given index.
-     * If the index is out of range, it throws an std::out_of_range exception. If the index exceeds the current capacity,
-     * reallocates the internal array with increased capacity, copying the existing elements to the new array.
-     * In case of memory allocation failure, catches std::bad_alloc.
+     * If the index exceeds the current capacity, reallocates the internal array with increased capacity,
+     * copying the existing elements to the new array. In case of memory allocation failure, catches std::bad_alloc.
      */
-    // TODO
+    if (index >= capacity)
+    {
+        int new_capacity = static_cast<int>(capacity * 1.5);
+        T* new_data = nullptr;
+
+        try
+        {
+            new_data = new T[new_capacity];
+        }
+        catch (const std::bad_alloc& e)
+        {
+            std::cerr << "Memory allocation failed: " << e.what() << '\n';
+            throw; // Re-throw the exception to indicate failure
+        }
+
+        for (int i = 0; i < capacity; i++)
+        {
+            new_data[i] = data[i];
+        }
+        delete[] data;
+        data = new_data;
+        capacity = new_capacity;
+    }
 }
 
 #endif /* XARRAYLIST_H */
