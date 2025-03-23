@@ -350,6 +350,17 @@ T XArrayList<T>::removeAt(int index)
 {
     // TODO
     checkIndex(index);
+    if (index == count)
+    {
+        throw std::out_of_range("Index is out of range!");
+    }
+    T storedAtIndex = data[index];
+    for (int i = index; i < count - 1; i++)
+    {
+        data[i] = data[i + 1];
+    }
+    count -= 1;
+    return storedAtIndex;
 }
 
 template <class T>
