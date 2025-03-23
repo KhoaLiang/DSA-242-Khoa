@@ -401,7 +401,6 @@ T XArrayList<T>::removeAt(int index)
 template <class T>
 bool XArrayList<T>::removeItem(T item, void (*removeItemData)(T))
 {
-    // TODO
     int index = indexOf(item);
     if (index != -1)
     {
@@ -470,27 +469,30 @@ T &XArrayList<T>::get(int index)
 template <class T>
 int XArrayList<T>::indexOf(T item)
 {
-    // TODO
     for (int i = 0; i < count; i++)
     {
-        if (data[i] == item)
+        if (itemEqual != nullptr)
         {
-            return i;
+            if (itemEqual(data[i], item))
+            {
+                return i;
+            }
+        }
+        else
+        {
+            if (data[i] == item)
+            {
+                return i;
+            }
         }
     }
     return -1;
 }
+
 template <class T>
 bool XArrayList<T>::contains(T item)
 {
-    for (int i = 0; i < count; i++)
-    {
-        if (data[i] == item)
-        {
-            return true;
-        }
-    }
-    return false;
+    return indexOf(item) != -1;
 }
 
 template <class T>

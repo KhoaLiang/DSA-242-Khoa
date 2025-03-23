@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iostream>
 #include <type_traits>
+#include <cmath>
+#include <iomanip>
 using namespace std;
 
 template<class T>
@@ -324,6 +326,27 @@ void XArrayList<T>::copyFrom(const XArrayList<T> &list)
      * Also duplicates user-defined comparison and deletion functions, if applicable.
      */
     // TODO
+    this->capacity = list.capacity;
+    this->count = list.count;
+    this->deleteUserData = list.deleteUserData;
+    this->itemEqual = list.itemEqual;
+
+    // Step 2: Allocate Memory for the Dynamic Array
+    try
+    {
+        this->data = new T[this->capacity];
+    }
+    catch (const std::bad_alloc &e)
+    {
+        std::cerr << "Memory allocation failed: " << e.what() << '\n';
+        throw; // Re-throw the exception to indicate failure
+    }
+
+    // Step 3: Copy Elements from the Source List
+    for (int i = 0; i < count; i++)
+    {
+        this->data[i] = list.data[i];
+    }
 }
 
 template <class T>
@@ -335,6 +358,14 @@ void XArrayList<T>::removeInternalData()
      * Finally, the dynamic array itself is deallocated from memory.
      */
     // TODO
+    if (deleteUserData != nullptr)
+    {
+        deleteUserData(this);
+    }
+    delete[] data;
+    data = nullptr;
+    count = 0;
+    capacity = 0;
 }
 
 template <class T>
@@ -398,7 +429,13 @@ XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 template <class T>
 XArrayList<T>::~XArrayList()
 {
-    // TODO
+    // If a custom deletion function is provided, call it
+    if (deleteUserData != nullptr)
+    {
+        deleteUserData(this);
+    }
+    // Delete the dynamically allocated array
+    delete[] data;
 }
 
 template <class T>
@@ -451,7 +488,6 @@ T XArrayList<T>::removeAt(int index)
 template <class T>
 bool XArrayList<T>::removeItem(T item, void (*removeItemData)(T))
 {
-    // TODO
     int index = indexOf(item);
     if (index != -1)
     {
@@ -510,31 +546,40 @@ T &XArrayList<T>::get(int index)
 {
     // TODO
     checkIndex(index);
-    if (index == count)
+    if (empty() == true && index == 0)
     {
         throw std::out_of_range("Index is out of range!");
     }
-    T valueToGet = data[index];
-    return valueToGet;
+    return data[index];
 }
 
 template <class T>
 int XArrayList<T>::indexOf(T item)
 {
-    // TODO
     for (int i = 0; i < count; i++)
     {
-        if (data[i] == item)
+        if (itemEqual != nullptr)
         {
-            return i;
+            if (itemEqual(data[i], item))
+            {
+                return i;
+            }
+        }
+        else
+        {
+            if (data[i] == item)
+            {
+                return i;
+            }
         }
     }
     return -1;
 }
+
 template <class T>
 bool XArrayList<T>::contains(T item)
 {
-    // TODO
+    return indexOf(item) != -1;
 }
 
 template <class T>
@@ -647,6 +692,64 @@ void XArrayList<T>::ensureCapacity(int index)
     }
 }
 
+
+class Point
+{
+private:
+    float x, y, z;
+    friend ostream &operator<<(ostream &os, const Point &point);
+
+public:
+    Point(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+    Point(const Point &point);
+
+    void setX(float x);
+    float getX() const;
+    void setY(float y);
+    float getY() const;
+    void setZ(float z);
+    float getZ() const;
+
+    float radius() const;
+
+    operator float();
+
+    bool operator==(Point rhs) const;
+
+    // Compare by x, y, z and radius
+    static bool pointEQ_X(Point &lhs, Point &rhs);
+    static bool pointEQ_Y(Point &lhs, Point &rhs);
+    static bool pointEQ_Z(Point &lhs, Point &rhs);
+    static bool pointEQ_Radius(Point &lhs, Point &rhs);
+    static bool pointEQ(Point &lhs, Point &rhs);
+
+    // Comparison functions for pointers
+    static bool pointEQ_X(Point *&lhs, Point *&rhs);
+    static bool pointEQ_Y(Point *&lhs, Point *&rhs);
+    static bool pointEQ_Z(Point *&lhs, Point *&rhs);
+    static bool pointEQ_Radius(Point *&lhs, Point *&rhs);
+    static bool pointEQ(Point *&lhs, Point *&rhs);
+
+    // Conversion to string
+    static string point2str_X(Point &point);
+    static string point2str_Y(Point &point);
+    static string point2str_Z(Point &point);
+    static string point2str_Radius(Point &point);
+    static string point2str(Point &point);
+
+    // Conversion to string for pointers
+    static string point2str_X(Point *&point);
+    static string point2str_Y(Point *&point);
+    static string point2str_Z(Point *&point);
+    static string point2str_Radius(Point *&point);
+    static string point2str(Point *&point);
+
+    // Point operations
+    static void pointRemove(Point *point);
+    static Point *genPoints(int size, float minValue = 0, float maxValue = 1,
+                            bool manualSeed = false, int seedValue = 0);
+    static void println(Point *head, int size);
+};
 
 bool printResult(const string& output, const string& expect,
                    const string& name) {
