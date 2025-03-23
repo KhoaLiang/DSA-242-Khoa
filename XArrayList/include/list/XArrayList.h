@@ -333,12 +333,23 @@ template <class T>
 void XArrayList<T>::add(int index, T e)
 {
     // TODO
+    checkIndex(index);
+    if (count == capacity)
+    {
+        ensureCapacity(capacity);
+    }
+    for (int i = count; i > index; i--) {
+        data[i] = data[i - 1];
+    }
+    data[index] = e;
+    count++;
 }
 
 template <class T>
 T XArrayList<T>::removeAt(int index)
 {
     // TODO
+    checkIndex(index);
 }
 
 template <class T>
@@ -462,7 +473,7 @@ void XArrayList<T>::checkIndex(int index)
     // TODO
     if (index < 0 || index > count)
     {
-        throw std::out_of_range("Index is out of range");
+        throw std::out_of_range("Index is out of range!");
     }
 }
 template <class T>
