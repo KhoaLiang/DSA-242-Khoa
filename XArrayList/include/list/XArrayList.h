@@ -25,6 +25,7 @@ protected:
     void (*deleteUserData)(XArrayList<T> *); // function pointer: be called to remove items (if they are pointer type)
 
 public:
+    // XArrayList();    
     XArrayList(
         void (*deleteUserData)(XArrayList<T> *) = 0,
         bool (*itemEqual)(T &, T &) = 0,
@@ -175,6 +176,25 @@ public:
 //////////////////////////////////////////////////////////////////////
 ////////////////////////     METHOD DEFNITION      ///////////////////
 //////////////////////////////////////////////////////////////////////
+// //user added default constructor
+// template <class T>
+// XArrayList<T>::XArrayList()
+// {
+//     this->capacity = 10; // Default capacity
+//     this->count = 0;
+//     this->deleteUserData = nullptr;
+//     this->itemEqual = nullptr;
+
+//     try
+//     {
+//         this->data = new T[this->capacity];
+//     }
+//     catch (const std::bad_alloc &e)
+//     {
+//         std::cerr << "Memory allocation failed: " << e.what() << '\n';
+//         throw; // Re-throw the exception to indicate failure
+//     }
+// }
 
 template <class T>
 XArrayList<T>::XArrayList(
@@ -194,6 +214,20 @@ XArrayList<T>::XArrayList(
     //     this.data = allocate memory for an array of size this.capacity
     // catch memory allocation failure
     //     handle the exception (e.g., throw an exception or handle the error)
+    this->capacity = capacity;
+    this->count = 0;
+    this->deleteUserData = deleteUserData;
+    this->itemEqual = itemEqual;
+
+    try
+    {
+        this->data = new T[this->capacity];
+    }
+    catch (const std::bad_alloc &e)
+    {
+        std::cerr << "Memory allocation failed: " << e.what() << '\n';
+        throw; // Re-throw the exception to indicate failure
+    }
 }
 
 template <class T>
@@ -264,12 +298,18 @@ template <class T>
 bool XArrayList<T>::empty()
 {
     // TODO
+    if (count != 0)
+    {
+        return false;
+    }
+    return true;
 }
 
 template <class T>
 int XArrayList<T>::size()
 {
     // TODO
+    return count;
 }
 
 template <class T>
@@ -308,6 +348,51 @@ string XArrayList<T>::toString(string (*item2str)(T &))
      */
 
     // TODO
+    // // Step 1: Initialize an Empty String
+    // result = "["
+    string result = "[";
+
+    // // Step 2: Iterate Over the Elements
+    // for i from 0 to count - 1 do
+    //     // Step 3: Convert Each Element to String
+    //     if item2str is not null then
+    //         elementStr = item2str(data[i])
+    //     else
+    //         elementStr = default string conversion of data[i]
+
+    //     // Step 4: Append Element to Result
+    //     result = result + elementStr
+    //     if i is not the last element then
+    //         result = result + ", "
+
+    // // Step 5: Add Closing Bracket
+    // result = result + "]"
+
+    // // Step 6: Return the Result
+    // return result
+    for (int i = 0; i < count; i++)
+    {
+        /* code */
+        string eleStr;
+        if (item2str != nullptr)
+        {
+            eleStr = item2str(data[i]);
+        }
+        else
+        {
+            stringstream ss;
+            ss << data[i];
+            eleStr = ss.str();
+        }
+        result += eleStr;
+
+        if (i < (count - 1))
+        {
+            result += ", ";
+        }
+    }
+    result = result + "]";
+    return result;
 }
 
 //////////////////////////////////////////////////////////////////////
