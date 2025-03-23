@@ -1,15 +1,100 @@
-/*
- * File:   XArrayList.h
- */
-
-#ifndef XARRAYLIST_H
-#define XARRAYLIST_H
-#include "list/IList.h"
+#include <string>
 #include <memory.h>
 #include <sstream>
 #include <iostream>
 #include <type_traits>
 using namespace std;
+
+template<class T>
+class IList{
+public:
+    virtual ~IList(){};
+    /* add(T e): append item "e" to the list
+     */
+    virtual void    add(T e)=0;
+    
+    
+    
+    /* add(int index, T e): insert item "e" at location "index";
+     *      location is an integer started from 0
+     */
+    virtual void    add(int index, T e)=0;
+    
+    
+    
+    /* removeAt(int index): remove the item at location "index"
+     * 
+     * return:
+     *  >> the item stored at index
+     *  >> throw an exception (std::out_of_range) if index is invalid
+     */
+    virtual T       removeAt(int index)=0;
+    
+    
+    /* removeItem(T item, void (*removeItemData)(T)=0): remove item stored in the list
+     *   >> removeItemData: a function pointer (maybe NULL, default),
+     *          that will be called inside of removeItem to delete the item's data stored in the list
+     *   >> removeItemData, why need? because we DO NOT type T is a pointer or not.
+     * 
+     * return:
+     *   >> true if "item" stored in the list; 
+     *   >> otherwise, return false
+     */
+    virtual bool    removeItem(T item, void (*removeItemData)(T)=0)=0;
+    
+    
+    
+    /* empty(): return true if the list is empty; otherwise, return false
+     */
+    virtual bool    empty()=0;
+    
+    
+    
+    /* size(): return number of items stored in the list
+     */
+    virtual int     size()=0;
+    
+    
+    
+    /* clear(): make the list empty by clearing all data and putting the list to the initial condition
+     */
+    virtual void    clear()=0;
+    
+    
+    
+    /* get(int index): return a reference to the item at location "index"
+     *      if index is invalid, this function will throw an exception "std::out_of_range"
+     * 
+     * NOTE: programmers can change the item returned by this function
+     */
+    virtual T&      get(int index)=0;
+    
+    
+    /* indexOf(T item): return the index of item
+     *      if item is not found, then return -1
+     */
+    virtual int     indexOf(T item)=0;
+    
+    
+    
+    /* contains(T item): return true if the list contains "item", else: return false
+     */
+    virtual bool    contains(T item)=0;
+    
+    
+    
+    /* toString(string (*item2str)(T&)=0 ): return a string describing the list.
+     *    >> We do not know the item type, so we do not know how to convert each item to string.
+     *       Therefore, we need a pointer to a function
+     *          that can convert the item (passed to that function) to a string
+     */
+    virtual string  toString(string (*item2str)(T&)=0 )=0;
+};
+
+
+
+
+
 
 template <class T>
 class XArrayList : public IList<T>
@@ -425,11 +510,12 @@ T &XArrayList<T>::get(int index)
 {
     // TODO
     checkIndex(index);
-    if (empty() == true && index == 0)
+    if (index == count)
     {
         throw std::out_of_range("Index is out of range!");
     }
-    return data[index];
+    T valueToGet = data[index];
+    return valueToGet;
 }
 
 template <class T>
@@ -448,14 +534,7 @@ int XArrayList<T>::indexOf(T item)
 template <class T>
 bool XArrayList<T>::contains(T item)
 {
-    for (int i = 0; i < count; i++)
-    {
-        if (data[i] == item)
-        {
-            return true;
-        }
-    }
-    return false;
+    // TODO
 }
 
 template <class T>
@@ -568,4 +647,42 @@ void XArrayList<T>::ensureCapacity(int index)
     }
 }
 
-#endif /* XARRAYLIST_H */
+
+bool printResult(const string& output, const string& expect,
+                   const string& name) {
+    if (expect == output) {
+      cout << "Test " + name + " --------------- PASS" 
+           << "\n";
+      return true;
+    } else {
+      cout << "Test " + name + " --------------- FAIL"  << "\n";
+      cout << " Expected: " << expect << endl;
+      cout << " Output  : " << output << endl;
+      return false;
+    }
+}
+bool XArrayList20()
+{
+    string name = "XArrayList20";
+    //! data
+  XArrayList<int> list;
+  list.add(0);
+  list.add(10);
+  list.add(2);
+
+  //! expect
+  string expect = "get=10;[0, 10, 2];size=3;empty=0";
+
+  //! output
+  string output = "get=" + to_string(list.get(1)) + ";";
+  output = output + list.toString() + ";size=" + to_string(list.size()) +
+            ";empty=" + to_string(list.empty());
+
+  //! remove data
+
+  //! print result
+  return printResult(output, expect, name);
+}
+int main(){
+    cout << "The result: " << XArrayList20() << endl;
+}

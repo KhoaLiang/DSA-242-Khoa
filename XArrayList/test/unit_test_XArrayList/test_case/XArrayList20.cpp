@@ -14,7 +14,7 @@ bool UNIT_TEST_XArrayList::XArrayList20()
 
   //! output
   string output = "get=" + to_string(list.get(1)) + ";";
-  output += list.toString() + ";size=" + to_string(list.size()) +
+  output = output + list.toString() + ";size=" + to_string(list.size()) +
             ";empty=" + to_string(list.empty());
 
   //! remove data
