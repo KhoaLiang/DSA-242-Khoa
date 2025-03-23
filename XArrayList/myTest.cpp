@@ -7,6 +7,7 @@
 #include <iomanip>
 using namespace std;
 
+#define EPSILON (1E-8)
 template<class T>
 class IList{
 public:
@@ -362,7 +363,7 @@ void XArrayList<T>::removeInternalData()
     {
         deleteUserData(this);
     }
-    delete[] data;
+    else delete[] data;
     data = nullptr;
     count = 0;
     capacity = 0;
@@ -429,13 +430,7 @@ XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 template <class T>
 XArrayList<T>::~XArrayList()
 {
-    // If a custom deletion function is provided, call it
-    if (deleteUserData != nullptr)
-    {
-        deleteUserData(this);
-    }
-    // Delete the dynamically allocated array
-    delete[] data;
+    //removeInternalData();
 }
 
 template <class T>
@@ -751,6 +746,157 @@ public:
     static void println(Point *head, int size);
 };
 
+
+ostream& operator<<(ostream& os, const Point& point) {
+  os << "P(" << fixed << setprecision(1) << point.x << ", " << setprecision(1)
+     << point.y << ", " << setprecision(1) << point.z << ")";
+  return os;
+}
+
+// Constructor
+Point::Point(float x, float y, float z) : x(x), y(y), z(z) {}
+
+// Copy constructor
+Point::Point(const Point& point) : x(point.x), y(point.y), z(point.z) {}
+
+// Setter for x
+void Point::setX(float x) { this->x = x; }
+
+// Getter for x
+float Point::getX() const { return x; }
+
+// Setter for y
+void Point::setY(float y) { this->y = y; }
+
+// Getter for y
+float Point::getY() const { return y; }
+
+// Setter for z
+void Point::setZ(float z) { this->z = z; }
+
+// Getter for z
+float Point::getZ() const { return z; }
+
+// Calculate radius
+float Point::radius() const { return std::sqrt(x * x + y * y + z * z); }
+
+// Conversion operator to float, returns the radius
+Point::operator float() { return this->radius(); }
+
+// Overload the equality operator
+bool Point::operator==(Point rhs) const {
+  return std::abs(x - rhs.x) < EPSILON && std::abs(y - rhs.y) < EPSILON &&
+         std::abs(z - rhs.z) < EPSILON;
+}
+
+// Comparison functions for non-pointer types
+bool Point::pointEQ_X(Point& lhs, Point& rhs) {
+  return std::abs(lhs.x - rhs.x) < EPSILON;
+}
+
+bool Point::pointEQ_Y(Point& lhs, Point& rhs) {
+  return std::abs(lhs.y - rhs.y) < EPSILON;
+}
+
+bool Point::pointEQ_Z(Point& lhs, Point& rhs) {
+  return std::abs(lhs.z - rhs.z) < EPSILON;
+}
+
+bool Point::pointEQ_Radius(Point& lhs, Point& rhs) {
+  return std::abs(lhs.radius() - rhs.radius()) < EPSILON;
+}
+
+bool Point::pointEQ(Point& lhs, Point& rhs) {
+  return pointEQ_X(lhs, rhs) && pointEQ_Y(lhs, rhs) && pointEQ_Z(lhs, rhs);
+}
+
+// Comparison functions for pointer types
+bool Point::pointEQ_X(Point*& lhs, Point*& rhs) {
+  return pointEQ_X(*lhs, *rhs);
+}
+
+bool Point::pointEQ_Y(Point*& lhs, Point*& rhs) {
+  return pointEQ_Y(*lhs, *rhs);
+}
+
+bool Point::pointEQ_Z(Point*& lhs, Point*& rhs) {
+  return pointEQ_Z(*lhs, *rhs);
+}
+
+bool Point::pointEQ_Radius(Point*& lhs, Point*& rhs) {
+  return pointEQ_Radius(*lhs, *rhs);
+}
+
+bool Point::pointEQ(Point*& lhs, Point*& rhs) { return pointEQ(*lhs, *rhs); }
+
+// Conversion to string functions for non-pointer types
+string Point::point2str_X(Point& point) {
+  std::stringstream ss;
+  ss << "X: " << point.x;
+  return ss.str();
+}
+
+string Point::point2str_Y(Point& point) {
+  std::stringstream ss;
+  ss << "Y: " << point.y;
+  return ss.str();
+}
+
+string Point::point2str_Z(Point& point) {
+  std::stringstream ss;
+  ss << "Z: " << point.z;
+  return ss.str();
+}
+
+string Point::point2str_Radius(Point& point) {
+  std::stringstream ss;
+  ss << "Radius: " << point.radius();
+  return ss.str();
+}
+
+string Point::point2str(Point& point) {
+  std::stringstream ss;
+  ss << "P(" << point.x << ", " << point.y << ", " << point.z << ")";
+  return ss.str();
+}
+
+// Conversion to string functions for pointer types
+string Point::point2str_X(Point*& point) { return point2str_X(*point); }
+
+string Point::point2str_Y(Point*& point) { return point2str_Y(*point); }
+
+string Point::point2str_Z(Point*& point) { return point2str_Z(*point); }
+
+string Point::point2str_Radius(Point*& point) {
+  return point2str_Radius(*point);
+}
+
+string Point::point2str(Point*& point) { return point2str(*point); }
+
+// Remove a point object
+void Point::pointRemove(Point* point) { delete point; }
+
+// Generate points (stub for future implementation)
+Point* Point::genPoints(int size, float minValue, float maxValue,
+                        bool manualSeed, int seedValue) {
+  Point* points = new Point[size];
+  // Implement point generation logic here
+  return points;
+}
+
+// Print a list of points
+void Point::println(Point* head, int size) {
+  stringstream os;
+  os << "[";
+  for (int idx = 0; idx < size - 1; idx++) {
+    os << head[idx] << ", ";
+  }
+  if (size > 0)
+    os << head[size - 1] << "]";
+  else
+    os << "]";
+  cout << os.str() << endl;
+}
 bool printResult(const string& output, const string& expect,
                    const string& name) {
     if (expect == output) {
@@ -786,6 +932,44 @@ bool XArrayList20()
   //! print result
   return printResult(output, expect, name);
 }
+bool XArrayList35()
+{
+    string name = "XArrayList35";
+   //! data
+  XArrayList<Point *> list(&XArrayList<Point *>::free, &Point::pointEQ, 0);
+  list.add(new Point(23.2f, 25.4f));
+  list.add(new Point(24.6f, 23.1f));
+  list.add(new Point(12.5f, 22.3f));
+  list.add(new Point(23.2f, 25.4f));
+  list.add(new Point(24.6f, 23.1f));
+  list.add(new Point(12.5f, 22.3f));
+  list.add(new Point(23.2f, 25.4f));
+  list.add(new Point(24.6f, 23.1f));
+  list.add(new Point(12.5f, 22.3f));
+  list.add(new Point(23.2f, 25.4f));
+  list.add(new Point(24.6f, 23.1f));
+  list.add(new Point(12.5f, 22.3f));
+
+  //! expect
+  string expect =
+      "[P(23.2, 25.4, 0.0), P(24.6, 23.1, 0.0), P(12.5, 22.3, 0.0), P(23.2, "
+      "25.4, 0.0), P(24.6, 23.1, 0.0), P(12.5, 22.3, 0.0), P(23.2, 25.4, 0.0), "
+      "P(24.6, 23.1, 0.0), P(12.5, 22.3, 0.0), P(23.2, 25.4, 0.0), P(24.6, "
+      "23.1, 0.0), P(12.5, 22.3, 0.0), ]";
+
+  //! output
+  stringstream output;
+  output << "[";
+  for (auto it : list) {
+    output << *it << ", ";
+  }
+  output << "]";
+
+  //! remove data
+
+  //! print result
+  return printResult(output.str(), expect, name);
+}
 int main(){
-    cout << "The result: " << XArrayList20() << endl;
+    cout << "The result: " << XArrayList35() << endl;
 }

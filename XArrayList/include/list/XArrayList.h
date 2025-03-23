@@ -275,7 +275,7 @@ void XArrayList<T>::removeInternalData()
     {
         deleteUserData(this);
     }
-    delete[] data;
+    else delete[] data;
     data = nullptr;
     count = 0;
     capacity = 0;
@@ -342,13 +342,7 @@ XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 template <class T>
 XArrayList<T>::~XArrayList()
 {
-    // If a custom deletion function is provided, call it
-    if (deleteUserData != nullptr)
-    {
-        deleteUserData(this);
-    }
-    // Delete the dynamically allocated array
-    delete[] data;
+    removeInternalData();
 }
 
 template <class T>
