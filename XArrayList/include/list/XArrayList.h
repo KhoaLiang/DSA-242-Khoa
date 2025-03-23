@@ -239,6 +239,27 @@ void XArrayList<T>::copyFrom(const XArrayList<T> &list)
      * Also duplicates user-defined comparison and deletion functions, if applicable.
      */
     // TODO
+    this->capacity = list.capacity;
+    this->count = list.count;
+    this->deleteUserData = list.deleteUserData;
+    this->itemEqual = list.itemEqual;
+
+    // Step 2: Allocate Memory for the Dynamic Array
+    try
+    {
+        this->data = new T[this->capacity];
+    }
+    catch (const std::bad_alloc &e)
+    {
+        std::cerr << "Memory allocation failed: " << e.what() << '\n';
+        throw; // Re-throw the exception to indicate failure
+    }
+
+    // Step 3: Copy Elements from the Source List
+    for (int i = 0; i < count; i++)
+    {
+        this->data[i] = list.data[i];
+    }
 }
 
 template <class T>
@@ -250,6 +271,14 @@ void XArrayList<T>::removeInternalData()
      * Finally, the dynamic array itself is deallocated from memory.
      */
     // TODO
+    if (deleteUserData != nullptr)
+    {
+        deleteUserData(this);
+    }
+    delete[] data;
+    data = nullptr;
+    count = 0;
+    capacity = 0;
 }
 
 template <class T>
@@ -313,7 +342,13 @@ XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 template <class T>
 XArrayList<T>::~XArrayList()
 {
-    // TODO
+    // If a custom deletion function is provided, call it
+    if (deleteUserData != nullptr)
+    {
+        deleteUserData(this);
+    }
+    // Delete the dynamically allocated array
+    delete[] data;
 }
 
 template <class T>
