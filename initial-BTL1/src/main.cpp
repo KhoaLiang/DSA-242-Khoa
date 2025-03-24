@@ -39,7 +39,16 @@ int main(int argc, char **argv)
     // }
     
     if (argc == 1) {
-        dlistDemo1();
+        xlistDemo1();
+    }
+    if (argc == 2) {
+        xlistDemo2();
+    }
+    if (argc == 3) {
+        xlistDemo3();
+    }
+    if (argc == 4) {
+        xlistDemo4();
     }
     return 0;
 }
