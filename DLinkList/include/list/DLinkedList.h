@@ -348,6 +348,7 @@ template <class T>
 int DLinkedList<T>::size()
 {
     // TODO
+    return count;
 }
 
 template <class T>
@@ -391,7 +392,32 @@ string DLinkedList<T>::toString(string (*item2str)(T &))
      * @param item2str A function that converts an item of type T to a string. If null, default to string conversion of T.
      * @return A string representation of the list with elements separated by commas and enclosed in square brackets.
      */
-    // TODO
+    string result = "[";
+    Node *current = head->next; // Start from the first real node
+
+    while (current != tail) // Iterate until the tail dummy node
+    {
+        string eleStr;
+        if (item2str != nullptr)
+        {
+            eleStr = item2str(current->data);
+        }
+        else
+        {
+            stringstream ss;
+            ss << current->data;
+            eleStr = ss.str();
+        }
+        result += eleStr;
+
+        if (current->next != tail)
+        {
+            result += ", ";
+        }
+        current = current->next;
+    }
+    result += "]";
+    return result;
 }
 
 template <class T>
