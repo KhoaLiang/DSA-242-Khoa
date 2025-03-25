@@ -174,19 +174,19 @@ public:
 template <class T>
 XArrayList<T>::XArrayList(void (*deleteUserData)(XArrayList<T> *),
                         bool (*itemEqual)(T &, T &), int capacity) {
-// TODO
-this->setDeleteUserDataPtr(deleteUserData);
-this->itemEqual = itemEqual;
-this->data = new T[capacity];
-this->capacity = capacity;
-this->count = 0;
+    // TODO
+    this->setDeleteUserDataPtr(deleteUserData);
+    this->itemEqual = itemEqual;
+    this->data = new T[capacity];
+    this->capacity = capacity;
+    this->count = 0;
 }
 
 template <class T>
 XArrayList<T>::XArrayList(const XArrayList<T> &list) {
-if (this != &list) {
-this->copyFrom(list);
-}
+    if (this != &list) {
+        this->copyFrom(list);
+    }
 }
 
 template <class T>
@@ -194,8 +194,8 @@ XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 {
     // TODO
     if (this != &list) {
-    this->removeInternalData();
-    this->copyFrom(list);
+        this->removeInternalData();
+        this->copyFrom(list);
     }
     return *this;
 }
@@ -228,26 +228,26 @@ void XArrayList<T>::add(int index, T e)
         data[i] = std::move(data[i - 1]);
     }
     data[index] = e;
-    this->count++;
+    count++;
 }
 
 template <class T>
 T XArrayList<T>::removeAt(int index)
 {
     // TODO
-    if (index < 0 || index >= this->count) {
+    if (index < 0 || index >= count) {
         throw std::out_of_range("Index is out of range!");
     }
     
-    T removedElement = data[index];
+    T elementRemoved = data[index];
     
-    for (int i = index; i < this->count - 1; ++i) {
+    for (int i = index; i < count - 1; ++i) {
         data[i] = std::move(data[i + 1]);
     }
     
-    this->count--;
+    count--;
     
-    return removedElement;
+    return elementRemoved;
 }
 
 template <class T>

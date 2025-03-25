@@ -1,6 +1,6 @@
 /*
- * File:   XArrayList.h
- */
+* File:   XArrayList.h
+*/
 
 #ifndef XARRAYLIST_H
 #define XARRAYLIST_H
@@ -25,7 +25,6 @@ protected:
     void (*deleteUserData)(XArrayList<T> *); // function pointer: be called to remove items (if they are pointer type)
 
 public:
-    // XArrayList();    
     XArrayList(
         void (*deleteUserData)(XArrayList<T> *) = 0,
         bool (*itemEqual)(T &, T &) = 0,
@@ -172,171 +171,31 @@ public:
     };
     // Iterator: END
 };
-
-//////////////////////////////////////////////////////////////////////
-////////////////////////     METHOD DEFNITION      ///////////////////
-//////////////////////////////////////////////////////////////////////
-// //user added default constructor
-// template <class T>
-// XArrayList<T>::XArrayList()
-// {
-//     this->capacity = 10; // Default capacity
-//     this->count = 0;
-//     this->deleteUserData = nullptr;
-//     this->itemEqual = nullptr;
-
-//     try
-//     {
-//         this->data = new T[this->capacity];
-//     }
-//     catch (const std::bad_alloc &e)
-//     {
-//         std::cerr << "Memory allocation failed: " << e.what() << '\n';
-//         throw; // Re-throw the exception to indicate failure
-//     }
-// }
-
 template <class T>
-XArrayList<T>::XArrayList(
-    void (*deleteUserData)(XArrayList<T> *),
-    bool (*itemEqual)(T &, T &),
-    int capacity)
-{
-    // TODO
-    // // Step 1: Initialize Member Variables
-    // this.capacity = capacity
-    // this.count = 0
-    // this.deleteUserData = deleteUserData
-    // this.itemEqual = itemEqual
-
-    // // Step 2: Allocate Memory for the Dynamic Array
-    // try
-    //     this.data = allocate memory for an array of size this.capacity
-    // catch memory allocation failure
-    //     handle the exception (e.g., throw an exception or handle the error)
-    this->capacity = capacity;
-    this->count = 0;
-    this->setDeleteUserDataPtr(deleteUserData);
-    this->itemEqual = itemEqual;
-
-    try
-    {
-        this->data = new T[this->capacity];
-    }
-    catch (const std::bad_alloc &e)
-    {
-        std::cerr << "Memory allocation failed: " << e.what() << '\n';
-        throw; // Re-throw the exception to indicate failure
-    }
+XArrayList<T>::XArrayList(void (*deleteUserData)(XArrayList<T> *),
+                        bool (*itemEqual)(T &, T &), int capacity) {
+// TODO
+this->setDeleteUserDataPtr(deleteUserData);
+this->itemEqual = itemEqual;
+this->data = new T[capacity];
+this->capacity = capacity;
+this->count = 0;
 }
 
 template <class T>
-void XArrayList<T>::copyFrom(const XArrayList<T> &list)
-{
-    /*
-     * Copies the contents of another XArrayList into this list.
-     * Initializes the list with the same capacity as the source list and copies all elements.
-     * Also duplicates user-defined comparison and deletion functions, if applicable.
-     */
-    // TODO
-    this->capacity = list.capacity;
-    this->count = list.count;
-    this->deleteUserData = list.deleteUserData;
-    this->itemEqual = list.itemEqual;
-
-    // Step 2: Allocate Memory for the Dynamic Array
-    try
-    {
-        this->data = new T[this->capacity];
-    }
-    catch (const std::bad_alloc &e)
-    {
-        std::cerr << "Memory allocation failed: " << e.what() << '\n';
-        throw; // Re-throw the exception to indicate failure
-    }
-
-    // Step 3: Copy Elements from the Source List
-    for (int i = 0; i < count; i++)
-    {
-        this->data[i] = list.data[i];
-    }
+XArrayList<T>::XArrayList(const XArrayList<T> &list) {
+if (this != &list) {
+this->copyFrom(list);
 }
-
-template <class T>
-void XArrayList<T>::removeInternalData()
-{
-    /*
-     * Clears the internal data of the list by deleting the dynamic array and any user-defined data.
-     * If a custom deletion function is provided, it is used to free the stored elements.
-     * Finally, the dynamic array itself is deallocated from memory.
-     */
-    // TODO
-    if (this->deleteUserData) {
-        this->deleteUserData(this);
-    }
-    
-    // Clear the dynamic array
-    delete[] data;
-    data = nullptr;
-    
-    // Reset the size and capacity
-    count = 0;
-}
-
-template <class T>
-XArrayList<T>::XArrayList(const XArrayList<T> &list)
-{
-    // TODO
-    // Step 1: Initialize Member Variables
-    this->capacity = list.capacity;
-    this->count = list.count;
-    this->deleteUserData = list.deleteUserData;
-    this->itemEqual = list.itemEqual;
-
-    // Step 2: Allocate Memory for the Dynamic Array
-    try
-    {
-        this->data = new T[this->capacity];
-    }
-    catch (const std::bad_alloc &e)
-    {
-        std::cerr << "Memory allocation failed: " << e.what() << '\n';
-        throw; // Re-throw the exception to indicate failure
-    }
-
-    // Step 3: Copy Elements from the Source List
-    for (int i = 0; i < count; i++)
-    {
-        this->data[i] = list.data[i];
-    }
 }
 
 template <class T>
 XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 {
     // TODO
-    if (this != &list) // Check for self-assignment
-    {
-        this->capacity = list.capacity;
-        this->count = list.count;
-        this->deleteUserData = list.deleteUserData;
-        this->itemEqual = list.itemEqual;
-        T* new_data = nullptr;
-        try
-        {
-            new_data = new T[this->capacity];
-        }
-        catch (const std::bad_alloc &e)
-        {
-            std::cerr << "Memory allocation failed: " << e.what() << '\n';
-            throw; // Re-throw the exception to indicate failure
-        }
-        for (int i = 0; i < count; i++)
-        {
-            new_data[i] = list.data[i];
-        }
-        delete[] data;
-        data = new_data;
+    if (this != &list) {
+    this->removeInternalData();
+    this->copyFrom(list);
     }
     return *this;
 }
@@ -344,6 +203,7 @@ XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 template <class T>
 XArrayList<T>::~XArrayList()
 {
+    // TODO
     this->removeInternalData();
 }
 
@@ -351,62 +211,60 @@ template <class T>
 void XArrayList<T>::add(T e)
 {
     // TODO
-    if (count == capacity)
-    {
-        /* code */
-        ensureCapacity(capacity);
-    }
-    data[count] = e;
-    count++;
+    this->ensureCapacity(this->count);
+    this->data[this->count++] = e;
 }
 
 template <class T>
 void XArrayList<T>::add(int index, T e)
 {
     // TODO
-    checkIndex(index);
-    if (count == capacity)
-    {
-        ensureCapacity(capacity);
+    if (index < 0 || index > count) {
+        throw std::out_of_range("Index is out of range!");
     }
-    for (int i = count; i > index; i--) {
-        data[i] = data[i - 1];
+    
+    this->ensureCapacity(this->count);
+    for (int i = this->count; i > index; --i) {
+        data[i] = std::move(data[i - 1]);
     }
     data[index] = e;
-    count++;
+    this->count++;
 }
 
 template <class T>
 T XArrayList<T>::removeAt(int index)
 {
     // TODO
-    checkIndex(index);
-    if (index == count)
-    {
+    if (index < 0 || index >= this->count) {
         throw std::out_of_range("Index is out of range!");
     }
-    T storedAtIndex = data[index];
-    for (int i = index; i < count - 1; i++)
-    {
-        data[i] = data[i + 1];
+    
+    T removedElement = data[index];
+    
+    for (int i = index; i < this->count - 1; ++i) {
+        data[i] = std::move(data[i + 1]);
     }
-    count -= 1;
-    return storedAtIndex;
+    
+    this->count--;
+    
+    return removedElement;
 }
 
 template <class T>
 bool XArrayList<T>::removeItem(T item, void (*removeItemData)(T))
 {
-    int index = indexOf(item);
-    if (index != -1)
-    {
-        T removedItem = removeAt(index);
-        if (removeItemData != nullptr)
-        {
-            removeItemData(removedItem);
+    // TODO
+    for (int i = 0; i < this->count; i++) {
+        if (XArrayList::equals(data[i], item, itemEqual)) {
+        if (removeItemData) {
+            removeItemData(data[i]);
         }
+    
+        removeAt(i);
         return true;
+        }
     }
+    
     return false;
 }
 
@@ -414,18 +272,14 @@ template <class T>
 bool XArrayList<T>::empty()
 {
     // TODO
-    if (count != 0)
-    {
-        return false;
-    }
-    return true;
+    return this->count == 0;
 }
 
 template <class T>
 int XArrayList<T>::size()
 {
     // TODO
-    return count;
+    return this->count;
 }
 
 template <class T>
@@ -435,63 +289,44 @@ void XArrayList<T>::clear()
     if (this->deleteUserData) {
         this->deleteUserData(this);
     }
-    else if (data != nullptr) {
-        delete[] data;
-    }
-    this->capacity = 10;
-    this->count = 0;
-    this->deleteUserData = nullptr;
-    this->itemEqual = nullptr;
-    try
-    {
-        this->data = new T[this->capacity];
-    }
-    catch (const std::bad_alloc &e)
-    {
-        std::cerr << "Memory allocation failed: " << e.what() << '\n';
-        throw; // Re-throw the exception to indicate failure
-    }
+    
+    count = 0;
 }
 
 template <class T>
 T &XArrayList<T>::get(int index)
 {
     // TODO
-    checkIndex(index);
-    if (empty() == true && index == 0)
-    {
+    if (index < 0 || index >= this->count) {
         throw std::out_of_range("Index is out of range!");
     }
+    
     return data[index];
 }
 
 template <class T>
 int XArrayList<T>::indexOf(T item)
 {
-    for (int i = 0; i < count; i++)
-    {
-        if (itemEqual != nullptr)
-        {
-            if (itemEqual(data[i], item))
-            {
-                return i;
-            }
-        }
-        else
-        {
-            if (data[i] == item)
-            {
-                return i;
-            }
+    // TODO
+    for (int i = 0; i < this->count; ++i) {
+        if (XArrayList::equals(data[i], item, itemEqual)) {
+        return i;
         }
     }
+    
     return -1;
 }
-
 template <class T>
 bool XArrayList<T>::contains(T item)
 {
-    return indexOf(item) != -1;
+    // TODO
+    for (int i = 0; i < this->count; ++i) {
+        if (XArrayList::equals(data[i], item, itemEqual)) {
+        return true;
+        }
+    }
+    
+    return false;
 }
 
 template <class T>
@@ -507,51 +342,29 @@ string XArrayList<T>::toString(string (*item2str)(T &))
      */
 
     // TODO
-    // // Step 1: Initialize an Empty String
-    // result = "["
-    string result = "[";
+    std::stringstream result;
+    result << "[";
 
-    // // Step 2: Iterate Over the Elements
-    // for i from 0 to count - 1 do
-    //     // Step 3: Convert Each Element to String
-    //     if item2str is not null then
-    //         elementStr = item2str(data[i])
-    //     else
-    //         elementStr = default string conversion of data[i]
-
-    //     // Step 4: Append Element to Result
-    //     result = result + elementStr
-    //     if i is not the last element then
-    //         result = result + ", "
-
-    // // Step 5: Add Closing Bracket
-    // result = result + "]"
-
-    // // Step 6: Return the Result
-    // return result
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < this->count; ++i)
     {
-        /* code */
-        string eleStr;
-        if (item2str != nullptr)
+        if (item2str)
         {
-            eleStr = item2str(data[i]);
+            result << item2str(this->data[i]);
         }
         else
         {
-            stringstream ss;
-            ss << data[i];
-            eleStr = ss.str();
+            result << this->data[i];
         }
-        result += eleStr;
 
-        if (i < (count - 1))
+        if (i < this->count - 1)
         {
-            result += ", ";
+            result << ", ";
         }
     }
-    result = result + "]";
-    return result;
+
+    result << "]";
+
+    return result.str();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -566,9 +379,9 @@ void XArrayList<T>::checkIndex(int index)
      * Ensures safe access to the list's elements by preventing invalid index operations.
      */
     // TODO
-    if (index < 0 || index > count)
+    if (index < 0 || index >= size())
     {
-        throw std::out_of_range("Index is out of range!");
+        throw std::out_of_range("Index out of range");
     }
 }
 template <class T>
@@ -576,32 +389,90 @@ void XArrayList<T>::ensureCapacity(int index)
 {
     /**
      * Ensures that the list has enough capacity to accommodate the given index.
-     * If the index exceeds the current capacity, reallocates the internal array with increased capacity,
-     * copying the existing elements to the new array. In case of memory allocation failure, catches std::bad_alloc.
+     * If the index is out of range, it throws an std::out_of_range exception. If the index exceeds the current capacity,
+     * reallocates the internal array with increased capacity, copying the existing elements to the new array.
+     * In case of memory allocation failure, catches std::bad_alloc.
      */
-    if (index >= capacity)
+    // TODO
+
+    if (index < 0)
     {
-        int new_capacity = static_cast<int>(capacity * 1.5);
-        T* new_data = nullptr;
-
-        try
-        {
-            new_data = new T[new_capacity];
-        }
-        catch (const std::bad_alloc& e)
-        {
-            std::cerr << "Memory allocation failed: " << e.what() << '\n';
-            throw; // Re-throw the exception to indicate failure
-        }
-
-        for (int i = 0; i < capacity; i++)
-        {
-            new_data[i] = data[i];
-        }
-        delete[] data;
-        data = new_data;
-        capacity = new_capacity;
+        throw std::out_of_range("Index cannot be negative!");
     }
+
+    if (index < capacity)
+    {
+        return;
+    }
+
+    int newCapacity = capacity;
+    while (newCapacity <= index)
+    {
+        newCapacity = (newCapacity > 0) ? newCapacity * 2 : 1;
+    }
+
+    try
+    {
+        T *newArray = new T[newCapacity];
+        // Di chuyển dữ liệu từ mảng cũ sang mảng mới
+        for (int i = 0; i < this->count; ++i)
+        {
+            newArray[i] = std::move(data[i]);
+        }
+
+        delete[] data;
+        data = newArray;
+        capacity = newCapacity;
+    }
+    catch (const std::bad_alloc &)
+    {
+        throw std::bad_alloc();
+    }
+}
+
+template <class T>
+void XArrayList<T>::copyFrom(const XArrayList<T> &list)
+{
+    /*
+    * Copies the contents of another XArrayList into this list.
+    * Initializes the list with the same capacity as the source list and copies
+    * all elements. Also duplicates user-defined comparison and deletion
+    * functions, if applicable.
+    */
+
+    this->capacity = list.capacity;
+    this->count = list.count;
+
+    this->data = new T[this->capacity];
+    for (int i = 0; i < list.count; ++i)
+    {
+        this->data[i] = list.data[i];
+    }
+
+    // Copy user-defined comparison/deletion functions, if applicable
+    this->deleteUserData = list.deleteUserData;
+    this->itemEqual = list.itemEqual;
+}
+
+template <class T>
+void XArrayList<T>::removeInternalData() {
+/*
+* Clears the internal data of the list by deleting the dynamic array and any
+* user-defined data. If a custom deletion function is provided, it is used to
+* free the stored elements. Finally, the dynamic array itself is deallocated
+* from memory.
+*/
+
+if (this->deleteUserData) {
+    this->deleteUserData(this);
+}
+
+// Clear the dynamic array
+delete[] data;
+data = nullptr;
+
+// Reset the size and capacity
+count = 0;
 }
 
 #endif /* XARRAYLIST_H */
