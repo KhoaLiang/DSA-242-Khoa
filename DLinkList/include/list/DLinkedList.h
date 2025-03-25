@@ -552,6 +552,29 @@ template <class T>
 bool DLinkedList<T>::contains(T item)
 {
     // TODO
+    if (!empty())
+    {
+        Node* current = head->next; // Start from the first real node
+        while (current != tail) // Iterate until the tail dummy node
+        {
+            if (itemEqual != nullptr)
+            {
+                if (itemEqual(current->data, item))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (current->data == item)
+                {
+                    return true;
+                }
+            }
+            current = current->next;
+        }
+    }
+    return false;
 }
 
 template <class T>
