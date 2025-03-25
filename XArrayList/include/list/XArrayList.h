@@ -239,16 +239,24 @@ template <class T>
 T XArrayList<T>::removeAt(int index)
 {
     // TODO
+    // Check if the index is within the valid range
     if (index < 0 || index >= count) {
+        // If the index is out of range, throw an exception
         throw std::out_of_range("Index is out of range!");
     }
-    
+
+    // Store the element to be removed
     T elementRemoved = data[index];
+
+    // Shift elements to the left to fill the gap created by the removed element
     for (int i = index; i < count - 1; ++i) {
         data[i] = std::move(data[i + 1]);
     }
-    
+
+    // Decrease the count of elements
     count--;
+
+    // Return the removed element
     return elementRemoved;
 }
 
@@ -476,6 +484,7 @@ void XArrayList<T>::removeInternalData() {
     * from memory.
 */
 
+//Check if there is custom data to be delete
 if (this->deleteUserData) {
     this->deleteUserData(this);
 }
