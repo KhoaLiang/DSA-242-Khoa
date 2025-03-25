@@ -47,6 +47,7 @@ public:
     int indexOf(T item);
     bool contains(T item);
     string toString(string (*item2str)(T &) = 0);
+    void checkIndex(int index);
     // Inherit from IList: END
 
     void println(string (*item2str)(T &) = 0)
@@ -313,18 +314,63 @@ DLinkedList<T>::DLinkedList(
     bool (*itemEqual)(T &, T &))
 {
     // TODO
+    this->deleteUserData = deleteUserData;
+    this->itemEqual = itemEqual;
+
+    head = new Node(); // Initialize head as a dummy node
+    tail = new Node(); // Initialize tail as a dummy node
+    head->next = tail;
+    head->prev = nullptr;
+    tail->prev = head;
+    tail->next = nullptr;
+    count = 0;
 }
 
 template <class T>
 DLinkedList<T>::DLinkedList(const DLinkedList<T> &list)
 {
     // TODO
+    if (this != &list) // Check for self-assignment
+    {
+        this->deleteUserData = list.deleteUserData;
+        this->itemEqual = list.itemEqual;
+
+        head = new Node(); // Initialize head as a dummy node
+        tail = new Node(); // Initialize tail as a dummy node
+        head->next = tail;
+        head->prev = nullptr;
+        tail->prev = head;
+        tail->next = nullptr;
+        count = 0;
+
+        Node *current = list.head->next; // Start from the first real node
+        while (current != list.tail) // Iterate until the tail dummy node
+        {
+            add(current->data);
+            current = current->next;
+        }
+    }
 }
 
 template <class T>
 DLinkedList<T> &DLinkedList<T>::operator=(const DLinkedList<T> &list)
 {
     // TODO
+    if (this != &list) // Check for self-assignment
+    {
+        if(count != 0) clear(); // Clear the current list if list is not empty
+
+        this->deleteUserData = list.deleteUserData;
+        this->itemEqual = list.itemEqual;
+
+        Node *current = list.head->next; // Start from the first real node
+        while (current != list.tail) // Iterate until the tail dummy node
+        {
+            add(current->data);
+            current = current->next;
+        }
+    }
+    return *this;
 }
 
 template <class T>
@@ -337,11 +383,27 @@ template <class T>
 void DLinkedList<T>::add(T e)
 {
     // TODO
+    Node* nodePrev = tail->prev;
+    Node* newNode = new Node(e, tail, nodePrev);
+    nodePrev->next = newNode;
+    tail->prev = newNode;
+    count++;
 }
 template <class T>
 void DLinkedList<T>::add(int index, T e)
 {
     // TODO
+    checkIndex(index);
+    Node* preIndexNode = head;
+    for (int position = 0; position < index; position++)
+    {
+        preIndexNode = preIndexNode->next;
+    }
+    Node* afterIndexNode = preIndexNode->next;
+    Node* newNode = new Node(e, afterIndexNode, preIndexNode);
+    preIndexNode->next = newNode;
+    afterIndexNode->prev = newNode;
+    count++;
 }
 
 template <class T>
@@ -359,48 +421,159 @@ template <class T>
 T DLinkedList<T>::removeAt(int index)
 {
     // TODO
+    checkIndex(index);
+    if (index == count)
+    {
+        throw std::out_of_range("Index is out of range!");
+    }
+    Node* current = head->next; // Start from the first real node
+    for (int position = 0; position < index; position++)
+    {
+        current = current->next;
+    }
+    Node* afterCurrentNode = current->next;
+    Node* beforeCurrentNode = current->prev;
+    beforeCurrentNode->next = afterCurrentNode;
+    afterCurrentNode->prev = beforeCurrentNode;
+    T deletedData = current->data;
+    delete current;
+    count--;
+
+    return deletedData;
 }
 
 template <class T>
 bool DLinkedList<T>::empty()
 {
     // TODO
+    if (count == 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 template <class T>
 int DLinkedList<T>::size()
 {
     // TODO
+    return count;
 }
 
 template <class T>
 void DLinkedList<T>::clear()
 {
-    // TODO
+    Node* current = head->next; // Start from the first real node
+    while (current != tail) // Iterate until the tail dummy node
+    {
+        Node* nextNode = current->next;
+        if (deleteUserData != nullptr)
+        {
+            deleteUserData(this);
+            break;
+        }
+        else
+        {
+            delete current;
+        }
+        current = nextNode;
+    }
+    head->next = tail;
+    tail->prev = head;
+    count = 0;
 }
 
 template <class T>
 T &DLinkedList<T>::get(int index)
 {
     // TODO
+    checkIndex(index);
+    if (empty() == true && index == 0)
+    {
+        throw std::out_of_range("Index is out of range!");
+    }
+    Node* current = head->next; // Start from the first real node
+    for (int position = 0; position < index; position++)
+    {
+        current = current->next;
+    }
+    return current->data;
 }
 
 template <class T>
 int DLinkedList<T>::indexOf(T item)
 {
-    // TODO
+    int index = 0;
+    if (!empty())
+    {
+        Node* current = head->next; // Start from the first real node
+        while (current != tail) // Iterate until the tail dummy node
+        {
+            if (itemEqual != nullptr)
+            {
+                if (itemEqual(current->data, item))
+                {
+                    return index;
+                }
+            }
+            else
+            {
+                if (current->data == item)
+                {
+                    return index;
+                }
+            }
+            current = current->next;
+            index++;
+        }
+    }
+    return -1;
 }
 
 template <class T>
 bool DLinkedList<T>::removeItem(T item, void (*removeItemData)(T))
 {
     // TODO
+    int index = indexOf(item);
+    if (index != -1)
+    {
+        T removedItem = removeAt(index);
+        if (removeItemData != nullptr)
+        {
+            removeItemData(removedItem);
+        }
+        return true;
+    }
+    return false;
 }
 
 template <class T>
 bool DLinkedList<T>::contains(T item)
 {
     // TODO
+    if (!empty())
+    {
+        Node* current = head->next; // Start from the first real node
+        while (current != tail) // Iterate until the tail dummy node
+        {
+            if (itemEqual != nullptr)
+            {
+                if (itemEqual(current->data, item))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (current->data == item)
+                {
+                    return true;
+                }
+            }
+            current = current->next;
+        }
+    }
+    return false;
 }
 
 template <class T>
@@ -414,7 +587,32 @@ string DLinkedList<T>::toString(string (*item2str)(T &))
      * @param item2str A function that converts an item of type T to a string. If null, default to string conversion of T.
      * @return A string representation of the list with elements separated by commas and enclosed in square brackets.
      */
-    // TODO
+    string result = "[";
+    Node *current = head->next; // Start from the first real node
+
+    while (current != tail) // Iterate until the tail dummy node
+    {
+        string eleStr;
+        if (item2str != nullptr)
+        {
+            eleStr = item2str(current->data);
+        }
+        else
+        {
+            stringstream ss;
+            ss << current->data;
+            eleStr = ss.str();
+        }
+        result += eleStr;
+
+        if (current->next != tail)
+        {
+            result += ", ";
+        }
+        current = current->next;
+    }
+    result += "]";
+    return result;
 }
 
 template <class T>
@@ -425,9 +623,12 @@ void DLinkedList<T>::copyFrom(const DLinkedList<T> &list)
      * Initializes the current list to an empty state and then duplicates all data and pointers from the source list.
      * Iterates through the source list and adds each element, preserving the order of the nodes.
      */
+
     // TODO
 }
-
+//////////////////////////////////////////////////////////////////////
+/////////////////////// (protected) METHOD DEFNITION /////////////////
+//////////////////////////////////////////////////////////////////////
 template <class T>
 void DLinkedList<T>::removeInternalData()
 {
@@ -437,6 +638,20 @@ void DLinkedList<T>::removeInternalData()
      * Traverses and deletes each node between the head and tail to release memory.
      */
     // TODO
+}
+template <class T>
+void DLinkedList<T>::checkIndex(int index)
+{
+    /**
+     * Validates whether the given index is within the valid range of the list.
+     * Throws an std::out_of_range exception if the index is negative or exceeds the number of elements.
+     * Ensures safe access to the list's elements by preventing invalid index operations.
+     */
+    // TODO
+    if (index < 0 || index > count)
+    {
+        throw std::out_of_range("Index is out of range!");
+    }
 }
 
 #endif /* DLINKEDLIST_H */

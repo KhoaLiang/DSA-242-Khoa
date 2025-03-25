@@ -38,17 +38,35 @@ int main(int argc, char **argv)
     //     tc_inventory1001();
     // }
     
+    // if (argc == 1) {
+    //     xlistDemo1();
+    // }
+    // if (argc == 2) {
+    //     xlistDemo2();
+    // }
+    // if (argc == 3) {
+    //     xlistDemo3();
+    // }
+    // if (argc == 4) {
+    //     xlistDemo4();
+    // }
     if (argc == 1) {
-        xlistDemo1();
+        dlistDemo1();
     }
     if (argc == 2) {
-        xlistDemo2();
+        dlistDemo2();
     }
     if (argc == 3) {
-        xlistDemo3();
+        dlistDemo3();
     }
     if (argc == 4) {
-        xlistDemo4();
+        dlistDemo4();
+    }
+    if (argc == 5) {
+        dlistDemo5();
+    }
+    if (argc == 6) {
+        dlistDemo6();
     }
     return 0;
 }
