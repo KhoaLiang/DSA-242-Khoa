@@ -422,6 +422,25 @@ template <class T>
 T DLinkedList<T>::removeAt(int index)
 {
     // TODO
+    checkIndex(index);
+    if (index == count)
+    {
+        throw std::out_of_range("Index is out of range!");
+    }
+    Node* current = head->next; // Start from the first real node
+    for (int position = 0; position < index; position++)
+    {
+        current = current->next;
+    }
+    Node* afterCurrentNode = current->next;
+    Node* beforeCurrentNode = current->prev;
+    beforeCurrentNode->next = afterCurrentNode;
+    afterCurrentNode->prev = beforeCurrentNode;
+    T deletedData = current->data;
+    delete current;
+    count--;
+
+    return deletedData;
 }
 
 template <class T>
