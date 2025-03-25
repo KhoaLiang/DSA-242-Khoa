@@ -1,24 +1,33 @@
 {
-  "version": "0.2.0",
   "configurations": [
     {
-      "name": "C/C++ Runner: Debug Session",
+      "name": "C/C++: g++.exe build and debug active file",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "program": "${workspaceFolder}//main.exe",
+
+      "args": ["List1D01"], // TEST CASE
+
       "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "c:/Users/trank/Downloads/personal/XArrayList/XArrayList",
-      "program": "c:/Users/trank/Downloads/personal/XArrayList/XArrayList/build/Debug/outDebug",
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
+      "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
         }
-      ]
+      ],
+      "preLaunchTask": "Build Unit Test"
     }
-  ]
+  ],
+  "version": "2.0.0"
 }
