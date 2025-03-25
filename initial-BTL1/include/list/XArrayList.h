@@ -477,24 +477,24 @@ void XArrayList<T>::copyFrom(const XArrayList<T> &list)
 
 template <class T>
 void XArrayList<T>::removeInternalData() {
-/*
-    * Clears the internal data of the list by deleting the dynamic array and any
-    * user-defined data. If a custom deletion function is provided, it is used to
-    * free the stored elements. Finally, the dynamic array itself is deallocated
-    * from memory.
-*/
+    /*
+        * Clears the internal data of the list by deleting the dynamic array and any
+        * user-defined data. If a custom deletion function is provided, it is used to
+        * free the stored elements. Finally, the dynamic array itself is deallocated
+        * from memory.
+    */
 
-//Check if there is custom data to be delete
-if (this->deleteUserData) {
-    this->deleteUserData(this);
-}
+    //Check if there is custom data to be delete
+    if (this->deleteUserData) {
+        this->deleteUserData(this);
+    }
 
-// Clear the array
-delete[] data;
-data = nullptr;
+    // Clear the array
+    delete[] data;
+    data = nullptr;
 
-// Reset the size
-count = 0;
+    // Reset the size
+    count = 0;
 }
 
 #endif /* XARRAYLIST_H */
