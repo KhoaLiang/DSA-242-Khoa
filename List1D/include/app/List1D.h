@@ -69,8 +69,8 @@ List1D<T>::List1D(const T *array, int num_elements)
 template <typename T>
 List1D<T>::List1D(const List1D<T> &other)
 {
-    // TODO
-   pList = new XArrayList<T>(*other.pList);
+    // Use the copy constructor of XArrayList to copy the list
+    pList = new XArrayList<T>(*dynamic_cast<XArrayList<T>*>(other.pList));
 }
 
 template <typename T>
@@ -98,8 +98,16 @@ T List1D<T>::get(int index) const
 template <typename T>
 void List1D<T>::set(int index, T value)
 {
-    // Use the set method of XArrayList to set the value at the specified index
-    pList->set(index, value);
+    // Remove the element at the specified index
+    if(index < pList->size()){
+        pList->removeAt(index);
+        pList->add(index, value);
+    }
+    // Add the new value at the same index
+    if (index == pList->size())
+    {
+        pList->add(value);
+    }
 }
 
 template <typename T>

@@ -6,7 +6,7 @@
       "request": "launch",
       "program": "${workspaceFolder}//main.exe",
 
-      "args": ["List1D01"], // TEST CASE
+      "args": ["List1D08"], // TEST CASE
 
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
