@@ -378,6 +378,10 @@ template <class T>
 DLinkedList<T>::~DLinkedList()
 {
     // TODO
+    removeInternalData();
+    delete head;
+
+    delete tail;
 }
 
 template <class T>
@@ -626,6 +630,18 @@ void DLinkedList<T>::copyFrom(const DLinkedList<T> &list)
      */
 
     // TODO
+    this->head->next = this->tail;
+
+    this->tail->prev = this->head;
+    this->count = 0;
+    // TODO
+    Node* current = list.head->next;
+    while (current != list.tail) {
+        add(current->data);
+        current = current->next;
+    }
+    this->deleteUserData = list.deleteUserData;
+    this->itemEqual = list.itemEqual;
 }
 //////////////////////////////////////////////////////////////////////
 /////////////////////// (protected) METHOD DEFNITION /////////////////
@@ -639,6 +655,23 @@ void DLinkedList<T>::removeInternalData()
      * Traverses and deletes each node between the head and tail to release memory.
      */
     // TODO
+    if (this->deleteUserData != nullptr) {
+         this->deleteUserData(this); 
+    }
+ 
+    Node* current = this->head->next; 
+    Node* nextNode = nullptr;  
+
+    while (current != this->tail) {  
+        nextNode = current->next; 
+
+        delete current; 
+        current = nextNode;  
+    }
+    this->head->next = this->tail;
+    this->tail->prev = this->head;
+
+    this->count = 0;
 }
 template <class T>
 void DLinkedList<T>::checkIndex(int index)
