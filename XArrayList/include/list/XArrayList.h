@@ -345,18 +345,18 @@ string XArrayList<T>::toString(string (*item2str)(T &))
     std::stringstream result;
     result << "[";
 
-    for (int i = 0; i < this->count; ++i)
+    for (int i = 0; i < count; ++i)
     {
         if (item2str)
         {
-            result << item2str(this->data[i]);
+            result << item2str(data[i]);
         }
         else
         {
-            result << this->data[i];
+            result << data[i];
         }
 
-        if (i < this->count - 1)
+        if (i < count - 1)
         {
             result << ", ";
         }
@@ -457,10 +457,10 @@ void XArrayList<T>::copyFrom(const XArrayList<T> &list)
 template <class T>
 void XArrayList<T>::removeInternalData() {
 /*
-* Clears the internal data of the list by deleting the dynamic array and any
-* user-defined data. If a custom deletion function is provided, it is used to
-* free the stored elements. Finally, the dynamic array itself is deallocated
-* from memory.
+    * Clears the internal data of the list by deleting the dynamic array and any
+    * user-defined data. If a custom deletion function is provided, it is used to
+    * free the stored elements. Finally, the dynamic array itself is deallocated
+    * from memory.
 */
 
 if (this->deleteUserData) {
