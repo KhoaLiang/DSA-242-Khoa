@@ -464,14 +464,14 @@ int DLinkedList<T>::size()
 template <class T>
 void DLinkedList<T>::clear()
 {
-    // TODO
-    Node* current = head->next;
-    while (current != tail)
+    Node* current = head->next; // Start from the first real node
+    while (current != tail) // Iterate until the tail dummy node
     {
         Node* nextNode = current->next;
         if (deleteUserData != nullptr)
         {
             deleteUserData(this);
+            break;
         }
         else
         {

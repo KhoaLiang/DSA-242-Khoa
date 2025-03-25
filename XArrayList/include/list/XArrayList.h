@@ -278,7 +278,7 @@ void XArrayList<T>::removeInternalData()
     else delete[] data;
     data = nullptr;
     count = 0;
-    capacity = 0;
+    capacity = 10;
 }
 
 template <class T>
