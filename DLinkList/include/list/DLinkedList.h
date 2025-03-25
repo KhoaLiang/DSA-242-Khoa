@@ -488,6 +488,17 @@ template <class T>
 T &DLinkedList<T>::get(int index)
 {
     // TODO
+    checkIndex(index);
+    if (empty() == true && index == 0)
+    {
+        throw std::out_of_range("Index is out of range!");
+    }
+    Node* current = head->next; // Start from the first real node
+    for (int position = 0; position < index; position++)
+    {
+        current = current->next;
+    }
+    return current->data;
 }
 
 template <class T>
