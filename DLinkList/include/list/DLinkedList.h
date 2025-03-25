@@ -493,13 +493,48 @@ T &DLinkedList<T>::get(int index)
 template <class T>
 int DLinkedList<T>::indexOf(T item)
 {
-    // TODO
+    int index = 0;
+    if (!empty())
+    {
+        Node* current = head->next; // Start from the first real node
+        while (current != tail) // Iterate until the tail dummy node
+        {
+            if (itemEqual != nullptr)
+            {
+                if (itemEqual(current->data, item))
+                {
+                    return index;
+                }
+            }
+            else
+            {
+                if (current->data == item)
+                {
+                    return index;
+                }
+            }
+            current = current->next;
+            index++;
+        }
+    }
+    return -1;
 }
 
 template <class T>
 bool DLinkedList<T>::removeItem(T item, void (*removeItemData)(T))
 {
     // TODO
+    int index = indexOf(item);
+    if (index != -1)
+    {
+        T removedItem = removeAt(index);
+        if (removeItemData != nullptr)
+        {
+            removeItemData(removedItem);
+        }
+        return true;
+    }
+    return false;
 }
 
 template <class T>
