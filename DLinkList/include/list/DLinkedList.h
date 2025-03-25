@@ -394,6 +394,17 @@ template <class T>
 void DLinkedList<T>::add(int index, T e)
 {
     // TODO
+    checkIndex(index);
+    Node* preIndexNode = head;
+    for (int position = 0; position < index; position++)
+    {
+        preIndexNode = preIndexNode->next;
+    }
+    Node* afterIndexNode = preIndexNode->next;
+    Node* newNode = new Node(e, afterIndexNode, preIndexNode);
+    preIndexNode->next = newNode;
+    afterIndexNode->prev = newNode;
+    count++;
 }
 
 template <class T>
