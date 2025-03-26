@@ -11,6 +11,9 @@
 
 using namespace std;
 
+
+
+
 // -------------------- List1D --------------------
 template <typename T>
 class List1D
@@ -34,7 +37,26 @@ public:
     friend ostream &operator<<(ostream &os, const List1D<T> &list);
 };
 
+template <typename T>
+class List2D
+{
+private:
+    IList<IList<T> *> *pMatrix;
 
+public:
+    List2D();
+    List2D(List1D<T> *array, int num_rows);
+    List2D(const List2D<T> &other);
+    virtual ~List2D();
+
+    int rows() const;
+    void setRow(int rowIndex, const List1D<T> &row);
+    T get(int rowIndex, int colIndex) const;
+    List1D<T> getRow(int rowIndex) const;
+    string toString() const;
+    template <typename U> //! thêm vào  để chạy test 
+    friend ostream &operator<<(ostream &os, const List2D<T> &matrix);
+};
 
 // -------------------- List1D Method Definitions --------------------
 template <typename T>
@@ -98,6 +120,8 @@ T List1D<T>::get(int index) const
 template <typename T>
 void List1D<T>::set(int index, T value)
 {
+    
+    
     // Remove the element at the specified index
     if(index < pList->size()){
         pList->removeAt(index);
@@ -134,6 +158,77 @@ ostream &operator<<(ostream &os, const List1D<T> &list)
     return os;
 }
 
+
+
+// -------------------- List2D Method Definitions --------------------
+template <typename T>
+List2D<T>::List2D()
+{
+    // TODO
+   
+}
+
+template <typename T>
+List2D<T>::List2D(List1D<T> *array, int num_rows)
+{
+
+}
+
+
+template <typename T>
+List2D<T>::List2D(const List2D<T> &other)
+{
+    // TODO
+
+}
+
+template <typename T>
+List2D<T>::~List2D()
+{
+    // TODO
+
+}
+
+template <typename T>
+int List2D<T>::rows() const
+{
+   
+}
+
+template <typename T>
+void List2D<T>::setRow(int rowIndex, const List1D<T> &row)
+{
+    // TODO
+    
+}
+
+template <typename T>
+T List2D<T>::get(int rowIndex, int colIndex) const
+{
+    // TODO
+  
+}
+
+template <typename T>
+List1D<T> List2D<T>::getRow(int rowIndex) const
+{
+    // TODO
+   
+}
+
+template <typename T>
+string List2D<T>::toString() const
+{
+    // TODO
+   
+}
+
+template <typename T>
+ostream &operator<<(ostream &os, const List2D<T> &matrix)
+{
+    // TODO
+  
+}
 
 
 #endif /* INVENTORY_MANAGER_H */

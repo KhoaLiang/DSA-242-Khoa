@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Build Unit Test",
+            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "args": [
+                "-std=c++17",
+                "-g",
+                "-o",
+                "main",
+                "-Iinclude",
+                "-Itest",
+                "-Itest\\unit_test_List2D",
+                "main.cpp",
+                "test\\unit_test_List2D\\unit_test_List2D.cpp",
+                "test\\unit_test.cpp",
+                "src\\Point.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D01.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D02.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D03.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D04.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D05.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D06.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D07.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D08.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D09.cpp",
+                "test\\unit_test_List2D\\test_case\\List2D10.cpp"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Custom build task for TASK3 unit tests."
+        }
+    ]
+}
