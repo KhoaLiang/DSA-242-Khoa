@@ -124,7 +124,19 @@ void List1D<T>::add(const T &value)
 template <typename T>
 string List1D<T>::toString() const
 {
-    return pList->toString();
+    // return pList->toString();
+    stringstream ss;
+    ss << "[";
+    for (int i = 0; i < pList->size(); i++)
+    {
+        ss << pList->get(i);
+        if (i < pList->size() - 1)
+        {
+            ss << ", ";
+        }
+    }
+    ss << "]";
+    return ss.str();
 }
 
 template <typename T>
