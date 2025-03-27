@@ -69,13 +69,13 @@ struct InventoryAttribute
     InventoryAttribute() : name(""), value(0.0) {}  // Constructor mặc định
     InventoryAttribute(const string &name, double value) : name(name), value(value) {}
     string toString() const { return name + ": " + to_string(value); }
-     //! thêm
-     // Định nghĩa toán tử so sánh ==
-     bool operator==(const InventoryAttribute& other) const {
+    //! thêm
+    // Định nghĩa toán tử so sánh ==
+    bool operator==(const InventoryAttribute& other) const {
         return name == other.name && value == other.value;
     }
-      // Toán tử in ra ostream
-      friend std::ostream &operator<<(std::ostream &os, const InventoryAttribute &attr) {
+    // Toán tử in ra ostream
+    friend std::ostream &operator<<(std::ostream &os, const InventoryAttribute &attr) {
         return os << attr.toString();
     }
 };
@@ -159,8 +159,14 @@ List1D<T>::List1D(const T *array, int num_elements)
 template <typename T>
 List1D<T>::List1D(const List1D<T> &other)
 {
-    // Use the copy constructor of XArrayList to copy the list
-    pList = new XArrayList<T>(*dynamic_cast<XArrayList<T>*>(other.pList));
+    pList = new XArrayList<T>();
+    if(this != &other)
+    {
+        for(int i = 0; i < other.size(); i++)
+        {
+            this->pList->add(other.get(i));
+        }
+    }
 }
 
 template <typename T>
@@ -238,6 +244,20 @@ ostream &operator<<(ostream &os, const List1D<T> &list)
     return os;
 }
 
+template <typename T>
+List1D<T> &List1D<T>::operator=(const List1D<T> &other)
+{
+    if (this != &other) // Avoid self-assignment
+    {
+        delete pList; // Clean up existing data
+        pList = new XArrayList<T>(); // Allocate new memory
+        for (int i = 0; i < other.size(); i++)
+        {
+            pList->add(other.get(i)); // Copy elements from the other list
+        }
+    }
+    return *this; // Return the current object
+}
 
 
 // -------------------- List2D Method Definitions --------------------
@@ -390,101 +410,35 @@ ostream &operator<<(ostream &os, const List2D<T> &matrix)
     return os;
 }
 
+
+//overload operator= for List2D
+template <typename T>
+List2D<T> &List2D<T>::operator=(const List2D<T> &other)
+{
+    if (this != &other) // Avoid self-assignment
+    {
+        // Clean up existing data
+        for (int i = 0; i < pMatrix->size(); i++)
+        {
+            delete pMatrix->get(i);
+        }
+        delete pMatrix;
+
+        // Allocate new memory
+        pMatrix = new XArrayList<IList<T> *>();
+        for (int i = 0; i < other.rows(); i++)
+        {
+            List1D<T> row = other.getRow(i);
+            XArrayList<T> *newRow = new XArrayList<T>();
+            for (int j = 0; j < row.size(); j++)
+            {
+                newRow->add(row.get(j)); // Copy elements from the other matrix
+            }
+            pMatrix->add(newRow);
+        }
+    }
+    return *this; // Return the current object
+}
 // -------------------- InventoryManager Method Definitions --------------------
-InventoryManager::InventoryManager()
-{
-    // TODO
-}
-
-InventoryManager::InventoryManager(const List2D<InventoryAttribute> &matrix,
-                                   const List1D<string> &names,
-                                   const List1D<int> &quantities)
-{
-    // TODO
-}
-
-InventoryManager::InventoryManager(const InventoryManager &other)
-{
-    // TODO
-}
-
-int InventoryManager::size() const
-{
-    // TODO
-}
-
-List1D<InventoryAttribute> InventoryManager::getProductAttributes(int index) const
-{
-    // TODO
-}
-
-string InventoryManager::getProductName(int index) const
-{
-    // TODO
-}
-
-int InventoryManager::getProductQuantity(int index) const
-{
-    // TODO
-}
-
-void InventoryManager::updateQuantity(int index, int newQuantity)
-{
-    // TODO
-}
-
-void InventoryManager::addProduct(const List1D<InventoryAttribute> &attributes, const string &name, int quantity)
-{
-    // TODO
-}
-
-void InventoryManager::removeProduct(int index)
-{
-    // TODO
-}
-
-List1D<string> InventoryManager::query(string attributeName, const double &minValue,
-                                       const double &maxValue, int minQuantity, bool ascending) const
-{
-    // TODO
-}
-
-void InventoryManager::removeDuplicates()
-{
-    // TODO
-}
-
-InventoryManager InventoryManager::merge(const InventoryManager &inv1,
-                                         const InventoryManager &inv2)
-{
-    // TODO
-}
-
-void InventoryManager::split(InventoryManager &section1,
-                             InventoryManager &section2,
-                             double ratio) const
-{
-    // TODO
-}
-
-List2D<InventoryAttribute> InventoryManager::getAttributesMatrix() const
-{
-    // TODO
-}
-
-List1D<string> InventoryManager::getProductNames() const
-{
-    // TODO
-}
-
-List1D<int> InventoryManager::getQuantities() const
-{
-    // TODO
-}
-
-string InventoryManager::toString() const
-{
-    // TODO
-}
-
+//Remember to copy from inventory.cpp
 #endif /* INVENTORY_MANAGER_H */

@@ -69,8 +69,14 @@ List1D<T>::List1D(const T *array, int num_elements)
 template <typename T>
 List1D<T>::List1D(const List1D<T> &other)
 {
-    // Use the copy constructor of XArrayList to copy the list
-    pList = new XArrayList<T>(*dynamic_cast<XArrayList<T>*>(other.pList));
+    pList = new XArrayList<T>();
+    if(this != &other)
+    {
+        for(int i = 0; i < other.size(); i++)
+        {
+            this->pList->add(other.get(i));
+        }
+    }
 }
 
 template <typename T>

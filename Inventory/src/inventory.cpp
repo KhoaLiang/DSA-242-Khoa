@@ -1,21 +1,21 @@
 
 #include "app/inventory.h"
 // // -------------------- InventoryManager Method Definitions --------------------
-InventoryManager::InventoryManager()
+InventoryManager::InventoryManager():attributesMatrix(), productNames(), quantities()
 {
     // TODO
-   
+    
 }
 
 InventoryManager::InventoryManager(const List2D<InventoryAttribute> &matrix,
                                    const List1D<string> &names,
                                    const List1D<int> &quantities)
+                                   : attributesMatrix(matrix), productNames(names), quantities(quantities)
 {
     // TODO
-  
 }
 
-InventoryManager::InventoryManager(const InventoryManager &other)
+InventoryManager::InventoryManager(const InventoryManager &other): attributesMatrix(other.attributesMatrix), productNames(other.productNames), quantities(other.quantities)
 {
     // TODO
 }
@@ -116,6 +116,11 @@ List1D<int> InventoryManager::getQuantities() const
 
 string InventoryManager::toString() const
 {
-    // TODO
-   
+    stringstream ss;
+    ss << "InventoryManager[\n";
+    ss << "  AttributesMatrix: " << attributesMatrix.toString() << ",\n";
+    ss << "  ProductNames: " << productNames.toString() << ",\n";
+    ss << "  Quantities: " << quantities.toString() << "\n";
+    ss << "]";
+    return ss.str();
 }
