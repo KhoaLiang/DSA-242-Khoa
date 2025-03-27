@@ -183,15 +183,22 @@ List2D<T>::List2D()
 template <typename T>
 List2D<T>::List2D(List1D<T> *array, int num_rows)
 {
+    // Initialize pMatrix as a new XArrayList of IList<T>* pointers
     pMatrix = new XArrayList<IList<T> *>();
     
+    // Iterate through the number of rows
     for (int i = 0; i < num_rows; i++)
     {
+        // Create a new row as an XArrayList<T>
         XArrayList<T>* newRow = new XArrayList<T>();
+        
+        // Copy elements from the given List1D array into the new row
         for (int j = 0; j < array[i].size(); j++)
         {
-            newRow->add(array[i].get(j));
+            newRow->add(array[i].get(j)); // Add each element to the new row
         }
+        
+        // Add the new row to the pMatrix
         pMatrix->add(newRow);
     }
 }
@@ -233,27 +240,27 @@ int List2D<T>::rows() const
 template <typename T>
 void List2D<T>::setRow(int rowIndex, const List1D<T> &row)
 {
-    // TODO
+    // Check if the row index is out of range
     if (rowIndex < 0 || rowIndex > pMatrix->size())
     {
         throw out_of_range("Index is out of range!");
     }
 
-    // Nếu hàng đã tồn tại, xóa và thay thế
+    // If the row already exists, delete and replace it
     if (rowIndex < pMatrix->size())
     {
         delete pMatrix->get(rowIndex);
         pMatrix->removeAt(rowIndex);
     }
 
-    // Tạo hàng mới và thêm dữ liệu
+    // Create a new row and add data
     XArrayList<T>* newRow = new XArrayList<T>();
     for (int i = 0; i < row.size(); i++)
     {
         newRow->add(row.get(i));
     }
 
-    // Thêm hàng vào ma trận
+    // Add the new row to the matrix
     pMatrix->add(rowIndex, newRow);
 }
 
@@ -288,23 +295,24 @@ List1D<T> List2D<T>::getRow(int rowIndex) const
 template <typename T>
 string List2D<T>::toString() const
 {
-    // TODO
+    // Convert the 2D list to a string representation
     stringstream ss;
-    ss << "[";  // Bắt đầu chuỗi kết quả
+    ss << "[";  // Start the result string
 
     for (int i = 0; i < rows(); i++)
     {
-        ss << getRow(i).toString();  // Gọi toString() của từng hàng
+        ss << getRow(i).toString();  // Call toString() for each row
 
         if (i < rows() - 1)
         {
-            ss << ", ";  // Chỉ thêm dấu phẩy nếu chưa phải hàng cuối
+            ss << ", ";  // Add a comma if it's not the last row
         }
     }
 
-    ss << "]";  // Kết thúc chuỗi kết quả
+    ss << "]";  // End the result string
     return ss.str();
 }
+
 
 template <typename T>
 ostream &operator<<(ostream &os, const List2D<T> &matrix)
