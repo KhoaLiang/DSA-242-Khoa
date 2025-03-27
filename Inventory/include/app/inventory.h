@@ -32,6 +32,11 @@ public:
     T get(int index) const;
     void set(int index, T value);
     void add(const T &value);
+    void removeAt(int index)
+    {
+        // Use the removeAt method from the underlying XArrayList
+        pList->removeAt(index);
+    }
 
     //! thêm hàm này 
     string toString() const;
@@ -54,6 +59,20 @@ public:
     int rows() const;
     //! thêm hàm này 
     
+    void removeAt(int rowIndex)
+    {
+        // Check if the row index is out of range
+        if (rowIndex < 0 || rowIndex >= rows())
+        {
+            throw out_of_range("Index is out of range!");
+        }
+
+        // Delete the row at the specified index
+        delete pMatrix->get(rowIndex);
+
+        // Remove the row from the matrix
+        pMatrix->removeAt(rowIndex);
+    }
     void setRow(int rowIndex, const List1D<T> &row);
     T get(int rowIndex, int colIndex) const;
     List1D<T> getRow(int rowIndex) const;

@@ -64,8 +64,20 @@ void InventoryManager::addProduct(const List1D<InventoryAttribute> &attributes, 
 
 void InventoryManager::removeProduct(int index)
 {
-    // TODO
-   
+    // Check if the index is out of range
+    if (index < 0 || index >= productNames.size())
+    {
+        throw std::out_of_range("Index is invalid!");
+    }
+
+    // Remove the product's attributes from the attributesMatrix
+    attributesMatrix.removeAt(index);
+
+    // Remove the product name from the productNames list
+    productNames.removeAt(index);
+
+    // Remove the product quantity from the quantities list
+    quantities.removeAt(index);
 }
 
 
@@ -132,9 +144,29 @@ List1D<string> InventoryManager::query(string attributeName, const double &minVa
 
 void InventoryManager::removeDuplicates()
 {
-    // TODO
-   
+    for (int i = 0; i < productNames.size(); i++)
+    {
+        for (int j = i + 1; j < productNames.size(); j++)
+        {
+            // Check if the product names and attributes are the same
+            if (productNames.get(i) == productNames.get(j) &&
+                attributesMatrix.getRow(i).toString() == attributesMatrix.getRow(j).toString())
+            {
+                // Merge the quantities
+                quantities.set(i, quantities.get(i) + quantities.get(j));
+
+                // Remove the duplicate product
+                attributesMatrix.removeAt(j);
+                productNames.removeAt(j);
+                quantities.removeAt(j);
+
+                // Adjust the index to account for the removed element
+                j--;
+            }
+        }
+    }
 }
+
 //! Hàm này có gọi removeDuplicates hay không
 InventoryManager InventoryManager::merge(const InventoryManager &inv1,
                                          const InventoryManager &inv2)
@@ -150,8 +182,23 @@ void InventoryManager::split(InventoryManager &section1,
                              InventoryManager &section2,
                              double ratio) const
 {
-    // TODO
-   
+    int totalProducts = attributesMatrix.rows();
+    int section1Size = (totalProducts * ratio) - static_cast<int>(totalProducts * ratio) > 0
+                           ? static_cast<int>(totalProducts * ratio) + 1
+                           : static_cast<int>(totalProducts * ratio);
+    int section2Size = totalProducts - section1Size;
+
+    // Add products to section1
+    for (int i = 0; i < section1Size; i++)
+    {
+        section1.addProduct(attributesMatrix.getRow(i), productNames.get(i), quantities.get(i));
+    }
+
+    // Add products to section2
+    for (int i = section1Size; i < totalProducts; i++)
+    {
+        section2.addProduct(attributesMatrix.getRow(i), productNames.get(i), quantities.get(i));
+    }
 }
 
 List2D<InventoryAttribute> InventoryManager::getAttributesMatrix() const
