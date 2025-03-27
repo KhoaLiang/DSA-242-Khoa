@@ -52,8 +52,14 @@ void InventoryManager::updateQuantity(int index, int newQuantity)
 
 void InventoryManager::addProduct(const List1D<InventoryAttribute> &attributes, const string &name, int quantity)
 {
-    // TODO
-        
+    // Add the new product's attributes to the attributesMatrix
+    attributesMatrix.setRow(attributesMatrix.rows(), attributes);
+
+    // Add the product name to the productNames list
+    productNames.add(name);
+
+    // Add the product quantity to the quantities list
+    quantities.add(quantity);
 }
 
 void InventoryManager::removeProduct(int index)
@@ -67,8 +73,60 @@ void InventoryManager::removeProduct(int index)
 List1D<string> InventoryManager::query(string attributeName, const double &minValue,
                                        const double &maxValue, int minQuantity, bool ascending) const
 {
-    // TODO
-   
+    List1D<string> result;
+
+    // Iterate through all products
+    for (int i = 0; i < attributesMatrix.rows(); i++)
+    {
+        // Get the attributes of the current product
+        List1D<InventoryAttribute> attributes = attributesMatrix.getRow(i);
+
+        // Find the attribute with the specified name
+        bool attributeFound = false;
+        double attributeValue = 0.0;
+        for (int j = 0; j < attributes.size(); j++)
+        {
+            if (attributes.get(j).name == attributeName)
+            {
+                attributeValue = attributes.get(j).value;
+                attributeFound = true;
+                break;
+            }
+        }
+
+        // Skip if the attribute is not found
+        if (!attributeFound)
+        {
+            continue;
+        }
+
+        // Check if the attribute value is within the range and the quantity is sufficient
+        if (attributeValue >= minValue && attributeValue <= maxValue && quantities.get(i) >= minQuantity)
+        {
+            result.add(productNames.get(i)); // Add the product name to the result
+        }
+    }
+
+    // Sort the result if ascending is true
+    if (ascending)
+    {
+        // Simple bubble sort for demonstration purposes
+        for (int i = 0; i < result.size() - 1; i++)
+        {
+            for (int j = 0; j < result.size() - i - 1; j++)
+            {
+                if (result.get(j) > result.get(j + 1))
+                {
+                    // Swap the elements
+                    string temp = result.get(j);
+                    result.set(j, result.get(j + 1));
+                    result.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
 
