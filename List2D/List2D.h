@@ -63,7 +63,9 @@ template <typename T>
 List1D<T>::List1D()
 {
     // TODO
+   
     pList = new XArrayList<T>();
+    // Sử dụng XArrayList làm danh sách nội bộ
 }
 
 template <typename T>
@@ -71,10 +73,11 @@ List1D<T>::List1D(int num_elements)
 {
     // TODO
     pList = new XArrayList<T>();
-    for (int i = 0; i < num_elements; i++)
+    for(int i = 0; i < num_elements; i++)
     {
-        pList->add(T());
+        pList->add(T{});
     }
+    
 }
 
 template <typename T>
@@ -82,7 +85,7 @@ List1D<T>::List1D(const T *array, int num_elements)
 {
     // TODO
     pList = new XArrayList<T>();
-    for (int i = 0; i < num_elements; i++)
+    for(int i = 0; i < num_elements; i++)
     {
         pList->add(array[i]);
     }
@@ -91,15 +94,22 @@ List1D<T>::List1D(const T *array, int num_elements)
 template <typename T>
 List1D<T>::List1D(const List1D<T> &other)
 {
-    // Use the copy constructor of XArrayList to copy the list
-    pList = new XArrayList<T>(*dynamic_cast<XArrayList<T>*>(other.pList));
+    // TODO
+    pList = new XArrayList<T>();
+    if(this != &other)
+    {
+        for(int i = 0; i < other.size(); i++)
+        {
+            this->pList->add(other.get(i));
+        }
+    }
 }
 
 template <typename T>
 List1D<T>::~List1D()
 {
     // TODO
-    delete pList;
+   delete pList;
 }
 
 template <typename T>
@@ -113,29 +123,26 @@ template <typename T>
 T List1D<T>::get(int index) const
 {
     // TODO
+    if(index < 0 || index >= pList->size())
+    throw out_of_range("Index is out of range!");
+return pList->get(index);
 
-    return pList->get(index);
+  
 }
 
 template <typename T>
 void List1D<T>::set(int index, T value)
 {
-    
-    
-    // Remove the element at the specified index
-    if(index < pList->size()){
-        pList->removeAt(index);
-        pList->add(index, value);
-    }
-    // Add the new value at the same index
-    if (index == pList->size())
+    // TODO
+    if(index >= 0 && index <= pList->size())
     {
-        pList->add(value);
+        if(index < pList->size())
+            pList->removeAt(index);
+        pList->add(index, value); 
     }
-    if (index > pList->size())
-    {
-        throw std::out_of_range("Index out of range!");
-    }
+    else 
+        throw out_of_range("Index is out of range!");
+    
 }
 
 template <typename T>
@@ -148,19 +155,13 @@ void List1D<T>::add(const T &value)
 template <typename T>
 string List1D<T>::toString() const
 {
-    // Convert the 1D list to a string representation
-    stringstream ss;
-    ss << "[";
-    for (int i = 0; i < pList->size(); i++)
-    {
-        ss << pList->get(i);
-        if (i < pList->size() - 1)
-        {
-            ss << ", ";
-        }
-    }
-    ss << "]";
-    return ss.str();
+    // TODO
+    return pList->toString([](T &item) -> string{
+        ostringstream os;
+        os <<item;
+        return os.str();
+    });
+ 
 }
 
 template <typename T>
@@ -169,8 +170,6 @@ ostream &operator<<(ostream &os, const List1D<T> &list)
     os << list.toString();
     return os;
 }
-
-
 
 // -------------------- List2D Method Definitions --------------------
 template <typename T>
@@ -313,5 +312,6 @@ ostream &operator<<(ostream &os, const List2D<T> &matrix)
     os << matrix.toString();
     return os;
 }
+
 
 #endif /* INVENTORY_MANAGER_H */
