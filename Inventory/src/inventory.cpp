@@ -22,26 +22,62 @@ InventoryManager::InventoryManager(const InventoryManager &other): attributesMat
 
 int InventoryManager::size() const
 {
-    // TODO
-  
+    // Return the number of rows in the attributesMatrix
+    return attributesMatrix.rows();
 }
 
 List1D<InventoryAttribute> InventoryManager::getProductAttributes(int index) const
 {
-    // TODO
-  
+    // Check if the index is out of range
+    if (index < 0 || index >= attributesMatrix.rows())
+    {
+        throw std::out_of_range("Index is invalid!");
+    }
+
+    // Return the attributes of the product at the given index
+    return attributesMatrix.getRow(index);
 }
 
 string InventoryManager::getProductName(int index) const
 {
-    // TODO
-    
+    // Check if the index is out of range
+    if (index < 0 || index >= productNames.size())
+    {
+        throw std::out_of_range("Index is invalid!");
+    }
+
+    // Return the name of the product at the given index
+    return productNames.get(index);
 }
 
 int InventoryManager::getProductQuantity(int index) const
 {
-    // TODO
- 
+    // Check if the index is out of range
+    if (index < 0 || index >= quantities.size())
+    {
+        throw std::out_of_range("Index is invalid!");
+    }
+
+    // Return the quantity of the product at the given index
+    return quantities.get(index);
+}
+
+List2D<InventoryAttribute> InventoryManager::getAttributesMatrix() const
+{
+    // Return the entire attributes matrix
+    return attributesMatrix;
+}
+
+List1D<string> InventoryManager::getProductNames() const
+{
+    // Return the list of product names
+    return productNames;
+}
+
+List1D<int> InventoryManager::getQuantities() const
+{
+    // Return the list of product quantities
+    return quantities;
 }
 
 void InventoryManager::updateQuantity(int index, int newQuantity)
@@ -201,23 +237,7 @@ void InventoryManager::split(InventoryManager &section1,
     }
 }
 
-List2D<InventoryAttribute> InventoryManager::getAttributesMatrix() const
-{
-    // TODO
-    
-}
 
-List1D<string> InventoryManager::getProductNames() const
-{
-    // TODO
-   
-}
-
-List1D<int> InventoryManager::getQuantities() const
-{
-    // TODO
-   
-}
 
 string InventoryManager::toString() const
 {
