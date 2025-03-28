@@ -128,60 +128,101 @@ void InventoryManager::removeProduct(int index)
 List1D<string> InventoryManager::query(string attributeName, const double &minValue,
                                        const double &maxValue, int minQuantity, bool ascending) const
 {
-    List1D<string> result;
+    List1D<string> resultNames;
+    List1D<InventoryAttribute> resultAttribute;
+    List1D<int> resultQuantity;
 
+    int sizeOfListProduct = attributesMatrix.rows();
     // Iterate through all products
-    for (int i = 0; i < attributesMatrix.rows(); i++)
+    for (int i = 0; i < sizeOfListProduct; i++)
     {
         // Get the attributes of the current product
         List1D<InventoryAttribute> attributes = attributesMatrix.getRow(i);
 
         // Find the attribute with the specified name
-        bool attributeFound = false;
-        double attributeValue = 0.0;
+        // bool attributeFound = false;
+        // double attributeValue = 0.0;
         for (int j = 0; j < attributes.size(); j++)
         {
             if (attributes.get(j).name == attributeName)
             {
-                attributeValue = attributes.get(j).value;
-                attributeFound = true;
-                break;
+                // attributeValue = attributes.get(j).value;
+                // attributeFound = true;
+                // break;
+                resultNames.add(productNames.get(i));
+                resultAttribute.add(attributes.get(j));
+                resultQuantity.add(quantities.get(i));
             }
         }
 
-        // Skip if the attribute is not found
-        if (!attributeFound)
-        {
-            continue;
-        }
+        // // Skip if the attribute is not found
+        // if (!attributeFound)
+        // {
+        //     continue;
+        // }
 
-        // Check if the attribute value is within the range and the quantity is sufficient
-        if (attributeValue >= minValue && attributeValue <= maxValue && quantities.get(i) >= minQuantity)
-        {
-            result.add(productNames.get(i)); // Add the product name to the result
-        }
+        // // Check if the attribute value is within the range and the quantity is sufficient
+        // if (attributeValue >= minValue && attributeValue <= maxValue && quantities.get(i) >= minQuantity)
+        // {
+        //     result.add(productNames.get(i)); // Add the product name to the result
+        // }
     }
 
-    // Sort the result if ascending is true
-    if (ascending)
+    int sizeOfResults = resultNames.size();
+    for (int current = 1; current < sizeOfResults; current++)
     {
-        // Simple bubble sort for demonstration purposes
-        for (int i = 0; i < result.size() - 1; i++)
+        InventoryAttribute keyAtt = resultAttribute.get(current);
+        string keyName = resultNames.get(current);
+        int keyQuantity = resultQuantity.get(current);
+
+        int walker = current - 1;
+
+        while (walker >= 0)
         {
-            for (int j = 0; j < result.size() - i - 1; j++)
+            bool shouldSwap = false;
+
+            // Xét giá trị thuộc tính trước
+            if (ascending)
             {
-                if (result.get(j) > result.get(j + 1))
+                if (resultAttribute.get(walker).value > keyAtt.value)
+                    shouldSwap = true;
+                else if (resultAttribute.get(walker).value == keyAtt.value)
                 {
-                    // Swap the elements
-                    string temp = result.get(j);
-                    result.set(j, result.get(j + 1));
-                    result.set(j + 1, temp);
+                    // Nếu giá trị thuộc tính bằng nhau, xét số lượng sản phẩm
+                    if (resultQuantity.get(walker) > keyQuantity)
+                        shouldSwap = true;
                 }
             }
+            else // Trường hợp sắp xếp giảm dần
+            {
+                if (resultAttribute.get(walker).value < keyAtt.value)
+                    shouldSwap = true;
+                else if (resultAttribute.get(walker).value == keyAtt.value)
+                {
+                    // Nếu giá trị thuộc tính bằng nhau, xét số lượng sản phẩm
+                    if (resultQuantity.get(walker) < keyQuantity)
+                        shouldSwap = true;
+                }
+            }
+
+            if (!shouldSwap)
+                break;
+
+            // Hoán đổi vị trí
+            resultAttribute.set(walker + 1, resultAttribute.get(walker));
+            resultNames.set(walker + 1, resultNames.get(walker));
+            resultQuantity.set(walker + 1, resultQuantity.get(walker));
+
+            walker--;
         }
+
+        // Đặt phần tử tại vị trí chính xác
+        resultAttribute.set(walker + 1, keyAtt);
+        resultNames.set(walker + 1, keyName);
+        resultQuantity.set(walker + 1, keyQuantity);
     }
 
-    return result;
+    return resultNames;
 }
 
 
@@ -274,7 +315,7 @@ void InventoryManager::split(InventoryManager &section1,
     // int section1Size = (totalProducts * ratio) - static_cast<int>(totalProducts * ratio) > 0
     //                        ? static_cast<int>(totalProducts * ratio) + 1
     //                        : static_cast<int>(totalProducts * ratio);
-    int section1Size = totalProducts * ratio + 1;
+    int section1Size = totalProducts * ratio + 0.98;
     int section2Size = totalProducts - section1Size;
 
     // Add products to section1
