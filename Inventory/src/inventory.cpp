@@ -215,33 +215,40 @@ InventoryManager InventoryManager::merge(const InventoryManager &inv1,
                                          const InventoryManager &inv2)
 {
     // Create new lists to hold the merged data
-    List2D<InventoryAttribute> mergedAttributesMatrix;
-    List1D<string> mergedProductNames;
-    List1D<int> mergedQuantities;
+    // List2D<InventoryAttribute> mergedAttributesMatrix;
+    // List1D<string> mergedProductNames;
+    // List1D<int> mergedQuantities;
 
-    // Add all products from inv1 to the merged inventory
-    for (int i = 0; i < inv1.size(); i++)
-    {
-        mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv1.getProductAttributes(i));
-        mergedProductNames.add(inv1.getProductName(i));
-        mergedQuantities.add(inv1.getProductQuantity(i));
-    }
+    InventoryManager Merge;
+
+    Merge = inv1;
+    
+
+    // // Add all products from inv1 to the merged inventory
+    // for (int i = 0; i < inv1.size(); i++)
+    // {
+    //     mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv1.getProductAttributes(i));
+    //     mergedProductNames.add(inv1.getProductName(i));
+    //     mergedQuantities.add(inv1.getProductQuantity(i));
+    // }
 
     // Add all products from inv2 to the merged inventory
     for (int i = 0; i < inv2.size(); i++)
     {
-        mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv2.getProductAttributes(i));
-        mergedProductNames.add(inv2.getProductName(i));
-        mergedQuantities.add(inv2.getProductQuantity(i));
+        // mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv2.getProductAttributes(i));
+        // mergedProductNames.add(inv2.getProductName(i));
+        // mergedQuantities.add(inv2.getProductQuantity(i));
+        Merge.addProduct(inv2.getProductAttributes(i), inv2.getProductName(i), inv2.getProductQuantity(i));
     }
 
-    // Create the merged inventory
-    InventoryManager mergedInventory(mergedAttributesMatrix, mergedProductNames, mergedQuantities);
+    // // Create the merged inventory
+    // InventoryManager mergedInventory(mergedAttributesMatrix, mergedProductNames, mergedQuantities);
 
-    // Remove duplicates from the merged inventory
-    mergedInventory.removeDuplicates();
+    // // Remove duplicates from the merged inventory
+    // mergedInventory.removeDuplicates();
 
-    return mergedInventory;
+    // return mergedInventory;
+    return Merge;
 }
 
 void InventoryManager::split(InventoryManager &section1,
@@ -249,22 +256,39 @@ void InventoryManager::split(InventoryManager &section1,
                              double ratio) const
 {
     int totalProducts = attributesMatrix.rows();
-    int section1Size = (totalProducts * ratio) - static_cast<int>(totalProducts * ratio) > 0
-                           ? static_cast<int>(totalProducts * ratio) + 1
-                           : static_cast<int>(totalProducts * ratio);
+    if (totalProducts == 0)
+    {
+        return;
+    }
+    int L1 = section1.size();
+    int L2 = section2.size();
+    for (int i = 0; i < L1; i++)
+    {
+        section1.removeProduct(0);
+    }
+    for (int i = 0; i < L2; i++)
+    {
+        section2.removeProduct(0);
+    }
+    
+    // int section1Size = (totalProducts * ratio) - static_cast<int>(totalProducts * ratio) > 0
+    //                        ? static_cast<int>(totalProducts * ratio) + 1
+    //                        : static_cast<int>(totalProducts * ratio);
+    int section1Size = totalProducts * ratio + 1;
     int section2Size = totalProducts - section1Size;
 
     // Add products to section1
     for (int i = 0; i < section1Size; i++)
     {
-        section1.addProduct(attributesMatrix.getRow(i), productNames.get(i), quantities.get(i));
+        section1.addProduct(getProductAttributes(i), getProductName(i), getProductQuantity(i));
     }
 
     // Add products to section2
-    for (int i = section1Size; i < totalProducts; i++)
+    for (int i = 0; i < section2Size; i++)
     {
-        section2.addProduct(attributesMatrix.getRow(i), productNames.get(i), quantities.get(i));
+        section2.addProduct(getProductAttributes(i+section1Size), getProductName(i+section1Size), getProductQuantity(i+section1Size));
     }
+    
 }
 
 

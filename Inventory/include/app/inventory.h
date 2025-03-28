@@ -144,6 +144,17 @@ public:
     List1D<string> getProductNames() const;
     List1D<int> getQuantities() const;
     string toString() const;
+
+    InventoryManager &operator=(const InventoryManager &other)
+    {
+        if (this != &other)
+        {
+            this->attributesMatrix = other.attributesMatrix;
+            this->productNames = other.productNames;
+            this->quantities = other.quantities;
+        }
+        return *this;
+    }
 };
 // -------------------- List1D Method Definitions --------------------
 template <typename T>
