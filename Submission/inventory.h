@@ -38,8 +38,9 @@ public:
         pList->removeAt(index);
     }
 
+    //! thêm hàm này 
     string toString() const;
-    template <typename U> 
+    template <typename U> //! thêm vào  để chạy test 
     friend ostream &operator<<(ostream &os, const List1D<T> &list);
 };
 
@@ -56,7 +57,7 @@ public:
     virtual ~List2D();
     List2D<T> &operator=(const List2D<T> &other);
     int rows() const;
- 
+    //! thêm hàm này 
     
     void removeAt(int rowIndex)
     {
@@ -76,7 +77,7 @@ public:
     T get(int rowIndex, int colIndex) const;
     List1D<T> getRow(int rowIndex) const;
     string toString() const;
-    template <typename U>
+    template <typename U> //! thêm vào  để chạy test 
     friend ostream &operator<<(ostream &os, const List2D<T> &matrix);
 };
 struct InventoryAttribute
@@ -143,6 +144,17 @@ public:
     List1D<string> getProductNames() const;
     List1D<int> getQuantities() const;
     string toString() const;
+
+    InventoryManager &operator=(const InventoryManager &other)
+    {
+        if (this != &other)
+        {
+            this->attributesMatrix = other.attributesMatrix;
+            this->productNames = other.productNames;
+            this->quantities = other.quantities;
+        }
+        return *this;
+    }
 };
 // -------------------- List1D Method Definitions --------------------
 template <typename T>
@@ -457,7 +469,7 @@ List2D<T> &List2D<T>::operator=(const List2D<T> &other)
     }
     return *this; // Return the current object
 }
-// // -------------------- InventoryManager Method Definitions --------------------
+// -------------------- InventoryManager Method Definitions --------------------
 InventoryManager::InventoryManager():attributesMatrix(), productNames(), quantities()
 {
     // TODO
@@ -585,60 +597,101 @@ void InventoryManager::removeProduct(int index)
 List1D<string> InventoryManager::query(string attributeName, const double &minValue,
                                        const double &maxValue, int minQuantity, bool ascending) const
 {
-    List1D<string> result;
+    List1D<string> resultNames;
+    List1D<InventoryAttribute> resultAttribute;
+    List1D<int> resultQuantity;
 
+    int sizeOfListProduct = attributesMatrix.rows();
     // Iterate through all products
-    for (int i = 0; i < attributesMatrix.rows(); i++)
+    for (int i = 0; i < sizeOfListProduct; i++)
     {
         // Get the attributes of the current product
         List1D<InventoryAttribute> attributes = attributesMatrix.getRow(i);
 
         // Find the attribute with the specified name
-        bool attributeFound = false;
-        double attributeValue = 0.0;
+        // bool attributeFound = false;
+        // double attributeValue = 0.0;
         for (int j = 0; j < attributes.size(); j++)
         {
             if (attributes.get(j).name == attributeName)
             {
-                attributeValue = attributes.get(j).value;
-                attributeFound = true;
-                break;
+                // attributeValue = attributes.get(j).value;
+                // attributeFound = true;
+                // break;
+                resultNames.add(productNames.get(i));
+                resultAttribute.add(attributes.get(j));
+                resultQuantity.add(quantities.get(i));
             }
         }
 
-        // Skip if the attribute is not found
-        if (!attributeFound)
-        {
-            continue;
-        }
+        // // Skip if the attribute is not found
+        // if (!attributeFound)
+        // {
+        //     continue;
+        // }
 
-        // Check if the attribute value is within the range and the quantity is sufficient
-        if (attributeValue >= minValue && attributeValue <= maxValue && quantities.get(i) >= minQuantity)
-        {
-            result.add(productNames.get(i)); // Add the product name to the result
-        }
+        // // Check if the attribute value is within the range and the quantity is sufficient
+        // if (attributeValue >= minValue && attributeValue <= maxValue && quantities.get(i) >= minQuantity)
+        // {
+        //     result.add(productNames.get(i)); // Add the product name to the result
+        // }
     }
 
-    // Sort the result if ascending is true
-    if (ascending)
+    int sizeOfResults = resultNames.size();
+    for (int current = 1; current < sizeOfResults; current++)
     {
-        // Simple bubble sort for demonstration purposes
-        for (int i = 0; i < result.size() - 1; i++)
+        InventoryAttribute keyAtt = resultAttribute.get(current);
+        string keyName = resultNames.get(current);
+        int keyQuantity = resultQuantity.get(current);
+
+        int walker = current - 1;
+
+        while (walker >= 0)
         {
-            for (int j = 0; j < result.size() - i - 1; j++)
+            bool shouldSwap = false;
+
+            // Xét giá trị thuộc tính trước
+            if (ascending)
             {
-                if (result.get(j) > result.get(j + 1))
+                if (resultAttribute.get(walker).value > keyAtt.value)
+                    shouldSwap = true;
+                else if (resultAttribute.get(walker).value == keyAtt.value)
                 {
-                    // Swap the elements
-                    string temp = result.get(j);
-                    result.set(j, result.get(j + 1));
-                    result.set(j + 1, temp);
+                    // Nếu giá trị thuộc tính bằng nhau, xét số lượng sản phẩm
+                    if (resultQuantity.get(walker) > keyQuantity)
+                        shouldSwap = true;
                 }
             }
+            else // Trường hợp sắp xếp giảm dần
+            {
+                if (resultAttribute.get(walker).value < keyAtt.value)
+                    shouldSwap = true;
+                else if (resultAttribute.get(walker).value == keyAtt.value)
+                {
+                    // Nếu giá trị thuộc tính bằng nhau, xét số lượng sản phẩm
+                    if (resultQuantity.get(walker) < keyQuantity)
+                        shouldSwap = true;
+                }
+            }
+
+            if (!shouldSwap)
+                break;
+
+            // Hoán đổi vị trí
+            resultAttribute.set(walker + 1, resultAttribute.get(walker));
+            resultNames.set(walker + 1, resultNames.get(walker));
+            resultQuantity.set(walker + 1, resultQuantity.get(walker));
+
+            walker--;
         }
+
+        // Đặt phần tử tại vị trí chính xác
+        resultAttribute.set(walker + 1, keyAtt);
+        resultNames.set(walker + 1, keyName);
+        resultQuantity.set(walker + 1, keyQuantity);
     }
 
-    return result;
+    return resultNames;
 }
 
 
@@ -672,33 +725,40 @@ InventoryManager InventoryManager::merge(const InventoryManager &inv1,
                                          const InventoryManager &inv2)
 {
     // Create new lists to hold the merged data
-    List2D<InventoryAttribute> mergedAttributesMatrix;
-    List1D<string> mergedProductNames;
-    List1D<int> mergedQuantities;
+    // List2D<InventoryAttribute> mergedAttributesMatrix;
+    // List1D<string> mergedProductNames;
+    // List1D<int> mergedQuantities;
 
-    // Add all products from inv1 to the merged inventory
-    for (int i = 0; i < inv1.size(); i++)
-    {
-        mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv1.getProductAttributes(i));
-        mergedProductNames.add(inv1.getProductName(i));
-        mergedQuantities.add(inv1.getProductQuantity(i));
-    }
+    InventoryManager Merge;
+
+    Merge = inv1;
+    
+
+    // // Add all products from inv1 to the merged inventory
+    // for (int i = 0; i < inv1.size(); i++)
+    // {
+    //     mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv1.getProductAttributes(i));
+    //     mergedProductNames.add(inv1.getProductName(i));
+    //     mergedQuantities.add(inv1.getProductQuantity(i));
+    // }
 
     // Add all products from inv2 to the merged inventory
     for (int i = 0; i < inv2.size(); i++)
     {
-        mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv2.getProductAttributes(i));
-        mergedProductNames.add(inv2.getProductName(i));
-        mergedQuantities.add(inv2.getProductQuantity(i));
+        // mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv2.getProductAttributes(i));
+        // mergedProductNames.add(inv2.getProductName(i));
+        // mergedQuantities.add(inv2.getProductQuantity(i));
+        Merge.addProduct(inv2.getProductAttributes(i), inv2.getProductName(i), inv2.getProductQuantity(i));
     }
 
-    // Create the merged inventory
-    InventoryManager mergedInventory(mergedAttributesMatrix, mergedProductNames, mergedQuantities);
+    // // Create the merged inventory
+    // InventoryManager mergedInventory(mergedAttributesMatrix, mergedProductNames, mergedQuantities);
 
-    // Remove duplicates from the merged inventory
-    mergedInventory.removeDuplicates();
+    // // Remove duplicates from the merged inventory
+    // mergedInventory.removeDuplicates();
 
-    return mergedInventory;
+    // return mergedInventory;
+    return Merge;
 }
 
 void InventoryManager::split(InventoryManager &section1,
@@ -706,22 +766,39 @@ void InventoryManager::split(InventoryManager &section1,
                              double ratio) const
 {
     int totalProducts = attributesMatrix.rows();
-    int section1Size = (totalProducts * ratio) - static_cast<int>(totalProducts * ratio) > 0
-                           ? static_cast<int>(totalProducts * ratio) + 1
-                           : static_cast<int>(totalProducts * ratio);
+    if (totalProducts == 0)
+    {
+        return;
+    }
+    int L1 = section1.size();
+    int L2 = section2.size();
+    for (int i = 0; i < L1; i++)
+    {
+        section1.removeProduct(0);
+    }
+    for (int i = 0; i < L2; i++)
+    {
+        section2.removeProduct(0);
+    }
+    
+    // int section1Size = (totalProducts * ratio) - static_cast<int>(totalProducts * ratio) > 0
+    //                        ? static_cast<int>(totalProducts * ratio) + 1
+    //                        : static_cast<int>(totalProducts * ratio);
+    int section1Size = totalProducts * ratio + 0.98;
     int section2Size = totalProducts - section1Size;
 
     // Add products to section1
     for (int i = 0; i < section1Size; i++)
     {
-        section1.addProduct(attributesMatrix.getRow(i), productNames.get(i), quantities.get(i));
+        section1.addProduct(getProductAttributes(i), getProductName(i), getProductQuantity(i));
     }
 
     // Add products to section2
-    for (int i = section1Size; i < totalProducts; i++)
+    for (int i = 0; i < section2Size; i++)
     {
-        section2.addProduct(attributesMatrix.getRow(i), productNames.get(i), quantities.get(i));
+        section2.addProduct(getProductAttributes(i+section1Size), getProductName(i+section1Size), getProductQuantity(i+section1Size));
     }
+    
 }
 
 
