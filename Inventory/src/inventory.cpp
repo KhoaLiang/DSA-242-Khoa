@@ -83,7 +83,14 @@ List1D<int> InventoryManager::getQuantities() const
 void InventoryManager::updateQuantity(int index, int newQuantity)
 {
     // TODO
-  
+    // Check if the index is out of range
+    if (index < 0 || index >= quantities.size())
+    {
+        throw std::out_of_range("Index is invalid!");
+    }
+
+    // Update the quantity of the product at the given index
+    quantities.set(index, newQuantity);
 }
 
 void InventoryManager::addProduct(const List1D<InventoryAttribute> &attributes, const string &name, int quantity)
