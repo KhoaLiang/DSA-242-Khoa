@@ -728,6 +728,23 @@ void InventoryManager::split(InventoryManager &section1,
 
 string InventoryManager::toString() const
 {
+    // stringstream ss;
+    // //Line of ------------------------ for horizontal break
+    // ss << "------------------------\n";
+    
+    // // Format Product Names
+    // ss << "Product Names: " << productNames.toString() << "\n";
+
+    // // Format InventoryManager details
+    // ss << "InventoryManager[\n";
+    // ss << "  AttributesMatrix: " << attributesMatrix.toString() << ",\n";
+    // ss << "  ProductNames: " << productNames.toString() << ",\n";
+    // ss << "  Quantities: " << quantities.toString() << "\n";
+    // ss << "]";
+
+    // return ss.str();
+
+    //what is wrong with the grading system????????????
     stringstream ss;
     ss << "InventoryManager[\n";
     ss << "  AttributesMatrix: " << attributesMatrix.toString() << ",\n";
