@@ -207,11 +207,34 @@ void InventoryManager::removeDuplicates()
 InventoryManager InventoryManager::merge(const InventoryManager &inv1,
                                          const InventoryManager &inv2)
 {
-    // TODO
+    // Create new lists to hold the merged data
+    List2D<InventoryAttribute> mergedAttributesMatrix;
+    List1D<string> mergedProductNames;
+    List1D<int> mergedQuantities;
 
-    
+    // Add all products from inv1 to the merged inventory
+    for (int i = 0; i < inv1.size(); i++)
+    {
+        mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv1.getProductAttributes(i));
+        mergedProductNames.add(inv1.getProductName(i));
+        mergedQuantities.add(inv1.getProductQuantity(i));
+    }
 
-    
+    // Add all products from inv2 to the merged inventory
+    for (int i = 0; i < inv2.size(); i++)
+    {
+        mergedAttributesMatrix.setRow(mergedAttributesMatrix.rows(), inv2.getProductAttributes(i));
+        mergedProductNames.add(inv2.getProductName(i));
+        mergedQuantities.add(inv2.getProductQuantity(i));
+    }
+
+    // Create the merged inventory
+    InventoryManager mergedInventory(mergedAttributesMatrix, mergedProductNames, mergedQuantities);
+
+    // Remove duplicates from the merged inventory
+    mergedInventory.removeDuplicates();
+
+    return mergedInventory;
 }
 
 void InventoryManager::split(InventoryManager &section1,
