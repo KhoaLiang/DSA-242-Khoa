@@ -116,11 +116,12 @@ void SLinkedList<T>::bubbleSort()
             }
             current = current->next;
         }
-        printList();
+        // printList();
         if (!swapped)
         {
             break;
         }
+        printList();
     }
 }
 
