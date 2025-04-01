@@ -6,38 +6,36 @@ template <class T>
 class Sorting {
 private:
     // Partition function using Hoare's algorithm
-    static T* Partition(T* start, T* end) {
-        T pivot = *start; // Choose the first element as the pivot
-        T* i = start - 1;
-        T* j = end + 1;
-
-        while (true) {
-            do {
+    static T* Partition(T* start, T* end) 
+    {
+        T p = start[0];
+        int i = 0;
+        int j = end - start;
+        do
+        {
+            do
+            {
                 i++;
-            } while (*i < pivot);
-
-            do {
+            } while (start[i] <= p);
+            do
+            {
                 j--;
-            } while (*j > pivot);
-
-            if (i >= j) {
-                return j; // Return the split position
-            }
-
-            swap(*i, *j);
-        }
+            } while (start[j] > p);
+            swap(start[i], start[j]);
+        } while (i < j);
+        swap(start[i], start[j]);
+        swap(start[0], start[j]);
+        cout <<  j <<' ';
+        return start + j;
     }
 
 public:
-    // QuickSort function
-    static void QuickSort(T* start, T* end) {
-        if (start < end) {
-            T* pivot = Partition(start, end);
-            cout << (pivot - start) << " "; // Print the index of the pivot
-
-            QuickSort(start, pivot);
-            QuickSort(pivot + 1, end);
-        }
+    static void QuickSort(T* start, T* end) 
+    {
+        if (start >= end) return;
+        T* par = Partition(start, end);    
+        QuickSort(start, par);
+        QuickSort(par + 1, end);
     }
 };
 
