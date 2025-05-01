@@ -294,7 +294,7 @@ public:
 };
 
 
-int* genIntArray(int size, int minValue=0, int maxValue=100, 
+inline int* genIntArray(int size, int minValue=0, int maxValue=100, 
                bool manualSeed=false, int seedValue=0){
 
     int* head = new int[size];
@@ -312,7 +312,7 @@ int* genIntArray(int size, int minValue=0, int maxValue=100,
     delete engine;
     return head;
 }
-int genInt(int minValue=0, int maxValue=100, 
+inline int genInt(int minValue=0, int maxValue=100, 
                bool manualSeed=false, int seedValue=0){
 
     int value;
@@ -329,7 +329,7 @@ int genInt(int minValue=0, int maxValue=100,
         
     return value;
 }
-int* permutation(int size, bool manualSeed=false, int seedValue=0){
+inline int* permutation(int size, bool manualSeed=false, int seedValue=0){
     int *ptr = new int[size];
     for(int idx=0; idx < size; idx++) ptr[idx] = idx;
     

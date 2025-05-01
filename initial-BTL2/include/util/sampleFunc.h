@@ -5,76 +5,64 @@
 #include <iomanip>
 #include <string>
 #include <sstream>
+#include <cmath>
 using namespace std;
 
 #include "util/Point.h"
 #include "util/ArrayLib.h"
 
-
-
-int minHeapComparator(int& a, int& b){
-    if (a < b) return -1;
-    else if(a > b) return +1;
-    else return 0;
-}
-int maxHeapComparator(int& a, int& b){
-    if (a < b) return +1;
-    else if(a > b) return -1;
-    else return 0;
+// Mark functions as inline
+inline int minHeapComparator(int& a, int& b) {
+    return (a < b) ? -1 : (a > b) ? 1 : 0;
 }
 
-int minHeapComparator(Point& a, Point& b){
-    float ra = sqrt(a.getX()*a.getX() + a.getY()*a.getY());
-    float rb = sqrt(b.getX()*b.getX() + b.getY()*b.getY());
-    if (ra < rb) return -1;
-    else if(ra > rb) return +1;
-    else return 0;
+inline int maxHeapComparator(int& a, int& b) {
+    return (a > b) ? -1 : (a < b) ? 1 : 0;
 }
-int maxHeapComparator(Point& a, Point& b){
-    float ra = sqrt(a.getX()*a.getX() + a.getY()*a.getY());
-    float rb = sqrt(b.getX()*b.getX() + b.getY()*b.getY());
-    if (ra < rb) return +1;
-    else if(ra > rb) return -1;
-    else return 0;
+
+inline int minHeapComparator(Point& a, Point& b) {
+    float ra = sqrt(a.getX() * a.getX() + a.getY() * a.getY());
+    float rb = sqrt(b.getX() * b.getX() + b.getY() * b.getY());
+    return (ra < rb) ? -1 : (ra > rb) ? 1 : 0;
 }
-int minHeapComparator(Point*& a, Point*& b){
-    float ra = sqrt(a->getX()*a->getX() + a->getY()*a->getY());
-    float rb = sqrt(b->getX()*b->getX() + b->getY()*b->getY());
-    if (ra < rb) return -1;
-    else if(ra > rb) return +1;
-    else return 0;
+
+inline int maxHeapComparator(Point& a, Point& b) {
+    float ra = sqrt(a.getX() * a.getX() + a.getY() * a.getY());
+    float rb = sqrt(b.getX() * b.getX() + b.getY() * b.getY());
+    return (ra > rb) ? -1 : (ra < rb) ? 1 : 0;
 }
-int maxHeapComparator(Point*& a, Point*& b){
-    float ra = sqrt(a->getX()*a->getX() + a->getY()*a->getY());
-    float rb = sqrt(b->getX()*b->getX() + b->getY()*b->getY());
-    if (ra < rb) return +1;
-    else if(ra > rb) return -1;
-    else return 0;
+
+inline int minHeapComparator(Point*& a, Point*& b) {
+    float ra = sqrt(a->getX() * a->getX() + a->getY() * a->getY());
+    float rb = sqrt(b->getX() * b->getX() + b->getY() * b->getY());
+    return (ra < rb) ? -1 : (ra > rb) ? 1 : 0;
 }
-////////////////////////////////////////////////////////////
-string point2str(Point& point){
+
+inline int maxHeapComparator(Point*& a, Point*& b) {
+    float ra = sqrt(a->getX() * a->getX() + a->getY() * a->getY());
+    float rb = sqrt(b->getX() * b->getX() + b->getY() * b->getY());
+    return (ra > rb) ? -1 : (ra < rb) ? 1 : 0;
+}
+
+inline string point2str(Point& point) {
     stringstream os;
-    os  << "("  << point.getX() 
-                << ", "
-                << point.getY()
-        << ")";
-    return os.str();
-}
-string point2str(Point*& point){
-    stringstream os;
-    os  << "("  << point->getX() 
-                << ", "
-                << point->getY()
-        << ")";
+    os << "(" << point.getX() << ", " << point.getY() << ")";
     return os.str();
 }
 
-string int2str(int& value){
+inline string point2str(Point*& point) {
+    stringstream os;
+    os << "(" << point->getX() << ", " << point->getY() << ")";
+    return os.str();
+}
+
+inline string int2str(int& value) {
     stringstream os;
     os << value;
     return os.str();
 }
-string int2str(int*& value){
+
+inline string int2str(int*& value) {
     stringstream os;
     os << *value;
     return os.str();
