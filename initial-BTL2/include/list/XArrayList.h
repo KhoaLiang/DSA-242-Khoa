@@ -9,10 +9,8 @@
 #include <sstream>
 #include <iostream>
 #include <type_traits>
-#include <utility> // For std::pair
 using namespace std;
 
-// Define operator<< for std::pair
 template <typename A, typename B>
 std::ostream &operator<<(std::ostream &os, const std::pair<A, B> &p)
 {

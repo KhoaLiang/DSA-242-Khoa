@@ -68,4 +68,6 @@ inline string int2str(int*& value) {
     return os.str();
 }
 
+
+
 #endif /* SAMPLEFUNC_H */

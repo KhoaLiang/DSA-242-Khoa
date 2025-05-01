@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "list/XArrayList.h"
 #include "util/Point.h"
+#include "util/sampleFunc.h"
 using namespace std;
 
 void xlistDemo1(){
