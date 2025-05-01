@@ -5,6 +5,8 @@
 #include "test/tc_xmap.h"
 #include "test/tc_heap.h"
 #include "test/tc_compressor.h"
+#include "test/tc_dlinkedlist.h"
+#include "test/tc_xarraylist.h"
 
 using namespace std;
 
