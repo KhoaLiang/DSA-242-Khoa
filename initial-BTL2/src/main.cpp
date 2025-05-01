@@ -5,10 +5,12 @@
 #include "test/tc_xmap.h"
 #include "test/tc_heap.h"
 #include "test/tc_compressor.h"
+#include "test/tc_dlinkedlist.h"
+#include "test/tc_xarraylist.h"
 
 using namespace std;
 
-void (*func_ptr[17])() = {
+void (*func_ptr[27])() = {
     hashDemo1,
     hashDemo2,
     hashDemo3,
@@ -25,7 +27,17 @@ void (*func_ptr[17])() = {
     tc_huffman1004,
     tc_huffman1005,
     tc_compressor1001,
-    tc_compressor1002
+    tc_compressor1002,
+    dlistDemo1,
+    dlistDemo2,
+    dlistDemo3,
+    dlistDemo4,
+    dlistDemo5,
+    dlistDemo6,
+    xlistDemo1,
+    xlistDemo2,
+    xlistDemo3,
+    xlistDemo4
 };
 
 void run(int func_idx)
@@ -37,8 +49,35 @@ int main(int argc, char **argv)
 {
     // cout << "Assignment-2" << endl;
     if (argc == 1) {
-        hashDemo1();
+        xlistDemo1();
     }
+    if (argc == 2) {
+        xlistDemo2();
+    }
+    if (argc == 3) {
+        xlistDemo3();
+    }
+    if (argc == 4) {
+        xlistDemo4();
+    }
+    // if (argc == 1) {
+    //     dlistDemo1();
+    // }
+    // if (argc == 2) {
+    //     dlistDemo2();
+    // }
+    // if (argc == 3) {
+    //     dlistDemo3();
+    // }
+    // if (argc == 4) {
+    //     dlistDemo4();
+    // }
+    // if (argc == 5) {
+    //     dlistDemo5();
+    // }
+    // if (argc == 6) {
+    //     dlistDemo6();
+    // }
     
     return 0;
 }
