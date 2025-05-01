@@ -2,6 +2,7 @@
 #define HEAP_H
 #include <memory.h>
 #include "heap/IHeap.h"
+#include "list/XArrayList.h"
 #include <sstream>
 #include <iostream>
 using namespace std;
@@ -85,7 +86,7 @@ private:
         else{
             if (a < b) return -1;
             else if(a > b) return 1;
-            else retu21rn 0;
+            else return 0;
         }
     }
     
