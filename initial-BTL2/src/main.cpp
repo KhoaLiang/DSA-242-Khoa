@@ -48,36 +48,36 @@ void run(int func_idx)
 int main(int argc, char **argv)
 {
     // cout << "Assignment-2" << endl;
-    if (argc == 1) {
-        xlistDemo1();
-    }
-    if (argc == 2) {
-        xlistDemo2();
-    }
-    if (argc == 3) {
-        xlistDemo3();
-    }
-    if (argc == 4) {
-        xlistDemo4();
-    }
     // if (argc == 1) {
-    //     dlistDemo1();
+    //     xlistDemo1();
     // }
     // if (argc == 2) {
-    //     dlistDemo2();
+    //     xlistDemo2();
     // }
     // if (argc == 3) {
-    //     dlistDemo3();
+    //     xlistDemo3();
     // }
     // if (argc == 4) {
-    //     dlistDemo4();
+    //     xlistDemo4();
     // }
-    // if (argc == 5) {
-    //     dlistDemo5();
-    // }
-    // if (argc == 6) {
-    //     dlistDemo6();
-    // }
+    if (argc == 1) {
+        dlistDemo1();
+    }
+    if (argc == 2) {
+        dlistDemo2();
+    }
+    if (argc == 3) {
+        dlistDemo3();
+    }
+    if (argc == 4) {
+        dlistDemo4();
+    }
+    if (argc == 5) {
+        dlistDemo5();
+    }
+    if (argc == 6) {
+        dlistDemo6();
+    }
     
     return 0;
 }

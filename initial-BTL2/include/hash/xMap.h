@@ -196,6 +196,14 @@ public:
             this->key = key;
             this->value = value;
         }
+        Entry(const Entry& entry){
+            this->key = entry.key;
+            this->value = entry.value;
+        }
+        Entry& operator=(const Entry& entry){
+            this->key = entry.key;
+            this->value = entry.value;
+        }
     };
     // Entry: END
 };
