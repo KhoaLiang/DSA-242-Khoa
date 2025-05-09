@@ -481,7 +481,19 @@ int xMap<K, V>::size()
 template <class K, class V>
 void xMap<K, V>::clear()
 {
-    // YOUR CODE IS HERE
+    // Step (a): Call the removeInternalData function to free all memory
+    removeInternalData();
+
+    // Step (b): Reinitialize the hash map as empty, with capacity equal to 10
+    this->capacity = 10; // Reset capacity to the default value
+    this->count = 0;     // Reset the count of entries
+    this->table = new DLinkedList<Entry *>[capacity]; // Allocate a new table
+
+    // Initialize each bucket in the new table
+    for (int idx = 0; idx < this->capacity; idx++)
+    {
+        this->table[idx] = DLinkedList<Entry *>(); // Initialize empty linked list
+    }
 }
 
 template <class K, class V>

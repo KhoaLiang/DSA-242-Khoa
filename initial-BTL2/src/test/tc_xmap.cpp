@@ -491,6 +491,21 @@ void hashDemo8(){
     cout << "Is map empty: " << (map.empty() ? "Yes" : "No") << endl; // Output: No
 }
 
+void hashDemo9(){
+    xMap<int, string> map(&xMap<int, string>::intKeyHash);
+    map.put(1, "One");
+    map.put(2, "Two");
+    map.put(3, "Three");
+
+    cout << "Before clear:" << endl;
+    map.println();
+
+    map.clear();
+
+    cout << "After clear:" << endl;
+    map.println();
+}
+
 int countryHash(string& country, int size){
     int sum =0;
     for(int idx=0; idx < country.length(); idx++)

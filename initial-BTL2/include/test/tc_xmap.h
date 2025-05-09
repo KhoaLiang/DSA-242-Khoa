@@ -6,3 +6,4 @@ void hashDemo5();
 void hashDemo6();
 void hashDemo7();
 void hashDemo8();
+void hashDemo9();

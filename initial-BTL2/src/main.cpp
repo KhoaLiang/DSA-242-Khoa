@@ -107,6 +107,9 @@ int main(int argc, char **argv)
     if (argc == 8) {
         hashDemo8();
     }
+    if (argc == 9) {
+        hashDemo9();
+    }
     
 
     // heapDemo
