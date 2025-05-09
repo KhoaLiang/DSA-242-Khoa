@@ -313,10 +313,22 @@ V xMap<K, V>::put(K key, V value)
 template <class K, class V>
 V &xMap<K, V>::get(K key)
 {
+    // Step (a): Use the hashCode function to calculate the index of the key
     int index = hashCode(key, capacity);
-    // YOUR CODE IS HERE
 
-    // key: not found
+    // Retrieve the linked list at the computed index
+    DLinkedList<Entry *> &list = table[index];
+
+    // Step (b): Search for the key in the list
+    for (auto pEntry : list)
+    {
+        if (keyEQ(pEntry->key, key)) // Key found
+        {
+            return pEntry->value; // Return the corresponding value
+        }
+    }
+
+    // Step (c): If not found, throw a KeyNotFound exception
     stringstream os;
     os << "key (" << key << ") is not found";
     throw KeyNotFound(os.str());
@@ -406,14 +418,48 @@ bool xMap<K, V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*delete
 template <class K, class V>
 bool xMap<K, V>::containsKey(K key)
 {
-    // YOUR CODE IS HERE
+    // Step (a): Use the hashCode function to compute the index of the key
+    int index = hashCode(key, capacity);
+
+    // Retrieve the linked list at the computed index
+    DLinkedList<Entry *> &list = table[index];
+
+    // Step (b): Search for the key in the list
+    for (auto pEntry : list)
+    {
+        if (keyEQ(pEntry->key, key)) // Key found
+        {
+            return true;
+        }
+    }
+
+    // Key not found
+    return false;
 }
 
 template <class K, class V>
 bool xMap<K, V>::containsValue(V value)
 {
-    // YOUR CODE IS HERE
+    // Step (a): Iterate through all buckets in the hash table
+    for (int idx = 0; idx < capacity; idx++)
+    {
+        // Retrieve the linked list at the current bucket
+        DLinkedList<Entry *> &list = table[idx];
+
+        // Search for the value in the list
+        for (auto pEntry : list)
+        {
+            if (valueEQ(pEntry->value, value)) // Value found
+            {
+                return true;
+            }
+        }
+    }
+
+    // Value not found
+    return false;
 }
+
 template <class K, class V>
 bool xMap<K, V>::empty()
 {

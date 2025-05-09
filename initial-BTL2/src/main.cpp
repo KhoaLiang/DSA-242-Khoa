@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void (*func_ptr[27])() = {
+void (*func_ptr[28])() = {
     hashDemo1,
     hashDemo2,
     hashDemo3,
@@ -18,6 +18,7 @@ void (*func_ptr[27])() = {
     hashDemo5,
     hashDemo6,
     hashDemo7,
+    hashDemo8,
     heapDemo1,
     heapDemo2,
     heapDemo3,
@@ -102,6 +103,9 @@ int main(int argc, char **argv)
     }
     if (argc == 7) {
         hashDemo7();
+    }
+    if (argc == 8) {
+        hashDemo8();
     }
     
 

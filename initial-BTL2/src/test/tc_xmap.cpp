@@ -472,6 +472,25 @@ void hashDemo7() {
     cout << "Capital of " << country << " is " << map.get("Vietnam") << endl;
 }
 
+//test containsKey, containsValue, empty
+void hashDemo8(){
+    xMap<int, string> map(&xMap<int, string>::intKeyHash);
+    map.put(1, "One");
+    map.put(2, "Two");
+    map.put(3, "Three");
+
+    // Check if the map contains a specific key
+    cout << "Contains key 2: " << (map.containsKey(2) ? "Yes" : "No") << endl; // Output: Yes
+    cout << "Contains key 4: " << (map.containsKey(4) ? "Yes" : "No") << endl; // Output: No
+
+    // Check if the map contains a specific value
+    cout << "Contains value 'Two': " << (map.containsValue("Two") ? "Yes" : "No") << endl; // Output: Yes
+    cout << "Contains value 'Four': " << (map.containsValue("Four") ? "Yes" : "No") << endl; // Output: No
+
+    // Check if the map is empty
+    cout << "Is map empty: " << (map.empty() ? "Yes" : "No") << endl; // Output: No
+}
+
 int countryHash(string& country, int size){
     int sum =0;
     for(int idx=0; idx < country.length(); idx++)
