@@ -325,10 +325,38 @@ V &xMap<K, V>::get(K key)
 template <class K, class V>
 V xMap<K, V>::remove(K key, void (*deleteKeyInMap)(K))
 {
-    int index = hashCode(key, capacity);
     // YOUR CODE IS HERE
+    // Step (a): Use the hashCode function to compute the index of the key
+    int index = hashCode(key, capacity);
+    DLinkedList<Entry *> &list = table[index];
 
-    // key: not found
+    // Step (b): Check whether the key exists in the list
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        Entry *entry = *it;
+        if (keyEQ(entry->key, key)) // Key found
+        {
+            // (a) Back up the corresponding value to return it
+            V value = entry->value;
+
+            // (b) Free the key if deleteKeyInMap is not NULL
+            if (deleteKeyInMap != nullptr)
+            {
+                deleteKeyInMap(entry->key);
+            }
+
+            // (c) Remove the Entry from the list and free its memory
+            list.removeItem(entry, &xMap<K, V>::deleteEntry);
+
+            // Decrease the count of entries
+            count--;
+
+            // Return the backed-up value
+            return value;
+        }
+    }
+
+    // Step (c): If not found, throw a KeyNotFound exception
     stringstream os;
     os << "key (" << key << ") is not found";
     throw KeyNotFound(os.str());
@@ -338,6 +366,41 @@ template <class K, class V>
 bool xMap<K, V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*deleteValueInMap)(V))
 {
     // YOUR CODE IS HERE
+    // Step (a): Use the hashCode function to compute the index of the key
+    int index = hashCode(key, capacity);
+    DLinkedList<Entry *> &list = table[index];
+
+    // Step (b): Check whether the <key, value> pair exists in the list
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        Entry *entry = *it;
+        if (keyEQ(entry->key, key) && valueEQ(entry->value, value)) // Key and value match
+        {
+            // (a) Free the key if deleteKeyInMap is not NULL
+            if (deleteKeyInMap != nullptr)
+            {
+                deleteKeyInMap(entry->key);
+            }
+
+            // (b) Free the value if deleteValueInMap is not NULL
+            if (deleteValueInMap != nullptr)
+            {
+                deleteValueInMap(entry->value);
+            }
+
+            // (c) Remove the Entry from the list and free its memory
+            list.removeItem(entry, &xMap<K, V>::deleteEntry);
+
+            // Decrease the count of entries
+            count--;
+
+            // Return true as the <key, value> pair was found and removed
+            return true;
+        }
+    }
+
+    // Step (c): If not found, return false
+    return false;
 }
 
 template <class K, class V>
@@ -355,12 +418,18 @@ template <class K, class V>
 bool xMap<K, V>::empty()
 {
     // YOUR CODE IS HERE
+    if (this->count == 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 template <class K, class V>
 int xMap<K, V>::size()
 {
     // YOUR CODE IS HERE
+    return this->count;
 }
 
 template <class K, class V>
@@ -372,13 +441,45 @@ void xMap<K, V>::clear()
 template <class K, class V>
 DLinkedList<K> xMap<K, V>::keys()
 {
-    // YOUR CODE IS HERE
+    DLinkedList<K> keyList;
+
+    // Iterate through each bucket in the hash table
+    for (int idx = 0; idx < this->capacity; idx++)
+    {
+        // Get the linked list at the current bucket
+        DLinkedList<Entry *> &list = this->table[idx];
+
+        // Iterate through the entries in the bucket
+        for (auto pEntry : list)
+        {
+            // Add the key to the keyList
+            keyList.add(pEntry->key);
+        }
+    }
+
+    return keyList;
 }
 
 template <class K, class V>
 DLinkedList<V> xMap<K, V>::values()
 {
-    // YOUR CODE IS HERE
+    DLinkedList<V> valueList;
+
+    // Iterate through each bucket in the hash table
+    for (int idx = 0; idx < this->capacity; idx++)
+    {
+        // Get the linked list at the current bucket
+        DLinkedList<Entry *> &list = this->table[idx];
+
+        // Iterate through the entries in the bucket
+        for (auto pEntry : list)
+        {
+            // Add the value to the valueList
+            valueList.add(pEntry->value);
+        }
+    }
+
+    return valueList;
 }
 
 template <class K, class V>

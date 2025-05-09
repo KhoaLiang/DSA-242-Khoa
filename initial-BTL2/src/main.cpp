@@ -97,6 +97,12 @@ int main(int argc, char **argv)
     if (argc == 5) {
         hashDemo5();
     }
+    if (argc == 6) {
+        hashDemo6();
+    }
+    if (argc == 7) {
+        hashDemo7();
+    }
     
 
     // heapDemo

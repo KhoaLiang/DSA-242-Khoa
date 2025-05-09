@@ -140,10 +140,34 @@ void hashDemo5() {
     cout << "Values: " << valueset.toString() << endl;
 }
 
+// void hashDemo6() {
+//     int count = 10000000;
+//     //int count = 100;
+//     int *keys = genIntArray(count, 0, 1999999999);
+//     xMap<int, int*> hash(&xMap<int, int*>::simpleHash);
+//     for (int idx = 0; idx < count; idx++) {
+//         hash.put(keys[idx], 0);
+//     }
+//     //hash.println();
+
+//     DLinkedList<int> clashes = hash.clashes();
+//     int max = -1;
+//     for (DLinkedList<int>::Iterator it = clashes.begin(); it != clashes.end(); it++) {
+//         int item = *it;
+//         if (item > max) max = item;
+//     }
+
+//     cout << "table size: " << hash.getCapacity() << endl;
+//     cout << "current count: " << hash.size() << endl;
+//     cout << "real load factor: " << (float) hash.size() / hash.getCapacity() << endl;
+//     cout << "max #collisions: " << max << endl;
+//     delete []keys;
+// }
+	
 void hashDemo6() {
     int count = 10000000;
     //int count = 100;
-    int *keys = genIntArray(count, 0, 1999999999);
+    int *keys = genIntArray(count, 0, 199999, true, 42);
     xMap<int, int*> hash(&xMap<int, int*>::simpleHash);
     for (int idx = 0; idx < count; idx++) {
         hash.put(keys[idx], 0);
