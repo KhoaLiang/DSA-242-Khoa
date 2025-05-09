@@ -214,26 +214,56 @@ public:
 
 template <class K, class V>
 xMap<K, V>::xMap(
-    int (*hashCode)(K &, int),
-    float loadFactor,
-    bool (*valueEqual)(V &lhs, V &rhs),
-    void (*deleteValues)(xMap<K, V> *),
-    bool (*keyEqual)(K &lhs, K &rhs),
-    void (*deleteKeys)(xMap<K, V> *pMap))
+    int (*hashCode)(K &, int), // Hash function
+    float loadFactor,  // Default load factor
+    bool (*valueEqual)(V &lhs, V &rhs), // Optional value equality function
+    void (*deleteValues)(xMap<K, V> *), // Optional cleanup function for values
+    bool (*keyEqual)(K &lhs, K &rhs),   // Optional key equality function
+    void (*deleteKeys)(xMap<K, V> *pMap)) // Optional cleanup function for keys
 {
-    // YOUR CODE IS HERE
+    // Validate parameters
+    if (hashCode == nullptr)
+    {
+        throw invalid_argument("hashCode function cannot be null.");
+    }
+    if (loadFactor <= 0.0f || loadFactor > 1.0f)
+    {
+        throw invalid_argument("loadFactor must be in the range (0, 1].");
+    }
+
+    // Initialize member variables
+    this->capacity = 10; // Default initial capacity
+    this->count = 0;
+    this->table = new DLinkedList<Entry *>[capacity]; // Allocate table
+
+    this->hashCode = hashCode;
+    this->loadFactor = loadFactor;
+
+    this->valueEqual = valueEqual;
+    this->deleteValues = deleteValues;
+
+    this->keyEqual = keyEqual;
+    this->deleteKeys = deleteKeys;
+
+    // Initialize each bucket in the table
+    for (int idx = 0; idx < this->capacity; idx++)
+    {
+        this->table[idx] = DLinkedList<Entry *>(); // Initialize empty linked list
+    }
 }
 
 template <class K, class V>
 xMap<K, V>::xMap(const xMap<K, V> &map)
 {
     // YOUR CODE IS HERE
+    copyMapFrom(map);
 }
 
 template <class K, class V>
 xMap<K, V> &xMap<K, V>::operator=(const xMap<K, V> &map)
 {
     // YOUR CODE IS HERE
+    copyMapFrom(map);
     return *this;
 }
 
@@ -241,6 +271,7 @@ template <class K, class V>
 xMap<K, V>::~xMap()
 {
     // YOUR CODE IS HERE
+    removeInternalData();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -250,11 +281,33 @@ xMap<K, V>::~xMap()
 template <class K, class V>
 V xMap<K, V>::put(K key, V value)
 {
+    // Step (a): Use the hashCode function to calculate the index of the key
     int index = this->hashCode(key, capacity);
-    V retValue = value;
-    // YOUR CODE IS HERE
 
-    return retValue;
+    // Step (b): Retrieve the linked list from the table at the computed index
+    DLinkedList<Entry *> &list = this->table[index];
+
+    // Step (c): Check whether the key already exists in the list
+    for (auto pEntry : list)
+    {
+        if (keyEQ(pEntry->key, key)) // Key exists
+        {
+            V oldValue = pEntry->value; // Backup the old value
+            pEntry->value = value;      // Update the value
+            return oldValue;            // Return the old value
+        }
+    }
+
+    // Step (c continued): Key does not exist, create a new Entry
+    Entry *newEntry = new Entry(key, value);
+    list.add(newEntry); // Add the new entry to the linked list
+
+    // Step (c continued): Increase the element count and ensure load factor
+    this->count++;
+    ensureLoadFactor(this->count);
+
+    // Return the new value (no old value exists)
+    return value;
 }
 
 template <class K, class V>
@@ -332,6 +385,19 @@ template <class K, class V>
 DLinkedList<int> xMap<K, V>::clashes()
 {
     // YOUR CODE IS HERE
+    DLinkedList<int> collisionCounts;
+
+    // Iterate through each bucket in the hash table
+    for (int idx = 0; idx < this->capacity; idx++)
+    {
+        // Get the linked list at the current bucket
+        DLinkedList<Entry *> &list = this->table[idx];
+
+        // Add the size of the linked list (number of entries) to the collisionCounts list
+        collisionCounts.add(list.size());
+    }
+
+    return collisionCounts;
 }
 
 template <class K, class V>
@@ -460,6 +526,7 @@ void xMap<K, V>::rehash(int newCapacity)
 template <class K, class V>
 void xMap<K, V>::removeInternalData()
 {
+    
     // Remove user's data
     if (deleteKeys != 0)
         deleteKeys(this);
@@ -487,6 +554,33 @@ void xMap<K, V>::removeInternalData()
  *          to the current table
  */
 
+//wtf why is the hash map copying from itselft???
+// template <class K, class V>
+// void xMap<K, V>::copyMapFrom(const xMap<K, V> &map)
+// {
+//     removeInternalData();
+
+//     this->capacity = map.capacity;
+//     this->count = 0;
+//     this->table = new DLinkedList<Entry *>[capacity];
+
+//     this->hashCode = hashCode;
+//     this->loadFactor = loadFactor;
+
+//     this->valueEqual = valueEqual;
+//     this->keyEqual = keyEqual;
+//     // SHOULD NOT COPY: deleteKeys, deleteValues => delete ONLY TIME in map if needed
+
+//     // copy entries
+//     for (int idx = 0; idx < map.capacity; idx++)
+//     {
+//         DLinkedList<Entry *> &list = map.table[idx];
+//         for (auto pEntry : list)
+//         {
+//             this->put(pEntry->key, pEntry->value);
+//         }
+//     }
+// }
 template <class K, class V>
 void xMap<K, V>::copyMapFrom(const xMap<K, V> &map)
 {
@@ -496,14 +590,15 @@ void xMap<K, V>::copyMapFrom(const xMap<K, V> &map)
     this->count = 0;
     this->table = new DLinkedList<Entry *>[capacity];
 
-    this->hashCode = hashCode;
-    this->loadFactor = loadFactor;
+    // Correctly copy the hashCode function pointer from the source map
+    this->hashCode = map.hashCode;
+    this->loadFactor = map.loadFactor;
 
-    this->valueEqual = valueEqual;
-    this->keyEqual = keyEqual;
+    this->valueEqual = map.valueEqual;
+    this->keyEqual = map.keyEqual;
     // SHOULD NOT COPY: deleteKeys, deleteValues => delete ONLY TIME in map if needed
 
-    // copy entries
+    // Copy entries
     for (int idx = 0; idx < map.capacity; idx++)
     {
         DLinkedList<Entry *> &list = map.table[idx];

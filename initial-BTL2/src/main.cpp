@@ -60,24 +60,60 @@ int main(int argc, char **argv)
     // if (argc == 4) {
     //     xlistDemo4();
     // }
+
+    // dList
+    // if (argc == 1) {
+    //     dlistDemo1();
+    // }
+    // if (argc == 2) {
+    //     dlistDemo2();
+    // }
+    // if (argc == 3) {
+    //     dlistDemo3();
+    // }
+    // if (argc == 4) {
+    //     dlistDemo4();
+    // }
+    // if (argc == 5) {
+    //     dlistDemo5();
+    // }
+    // if (argc == 6) {
+    //     dlistDemo6();
+    // }
+
+    // hashDemo
     if (argc == 1) {
-        dlistDemo1();
+        hashDemo1();
     }
     if (argc == 2) {
-        dlistDemo2();
+        hashDemo2();
     }
     if (argc == 3) {
-        dlistDemo3();
+        hashDemo3();
     }
     if (argc == 4) {
-        dlistDemo4();
+        hashDemo4();
     }
     if (argc == 5) {
-        dlistDemo5();
+        hashDemo5();
     }
-    if (argc == 6) {
-        dlistDemo6();
-    }
+    
+
+    // heapDemo
+    // if (argc == 1) {
+    //     heapDemo1();
+    // }
+    // if (argc == 2) {
+    //     heapDemo2();
+    // }
+
+    //huffMan demo
+    // if (argc == 1) {
+    //     tc_huffman1001();
+    // }
+    // if (argc == 2) {
+    //     tc_compressor1001();
+    // }
     
     return 0;
 }
