@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void (*func_ptr[28])() = {
+void (*func_ptr[29])() = {
     hashDemo1,
     hashDemo2,
     hashDemo3,
@@ -22,6 +22,7 @@ void (*func_ptr[28])() = {
     heapDemo1,
     heapDemo2,
     heapDemo3,
+    heapDemo4,
     tc_huffman1001,
     tc_huffman1002,
     tc_huffman1003,
@@ -83,42 +84,48 @@ int main(int argc, char **argv)
     // }
 
     // hashDemo
-    if (argc == 1) {
-        hashDemo1();
-    }
-    if (argc == 2) {
-        hashDemo2();
-    }
-    if (argc == 3) {
-        hashDemo3();
-    }
-    if (argc == 4) {
-        hashDemo4();
-    }
-    if (argc == 5) {
-        hashDemo5();
-    }
-    if (argc == 6) {
-        hashDemo6();
-    }
-    if (argc == 7) {
-        hashDemo7();
-    }
-    if (argc == 8) {
-        hashDemo8();
-    }
-    if (argc == 9) {
-        hashDemo9();
-    }
+    // if (argc == 1) {
+    //     hashDemo1();
+    // }
+    // if (argc == 2) {
+    //     hashDemo2();
+    // }
+    // if (argc == 3) {
+    //     hashDemo3();
+    // }
+    // if (argc == 4) {
+    //     hashDemo4();
+    // }
+    // if (argc == 5) {
+    //     hashDemo5();
+    // }
+    // if (argc == 6) {
+    //     hashDemo6();
+    // }
+    // if (argc == 7) {
+    //     hashDemo7();
+    // }
+    // if (argc == 8) {
+    //     hashDemo8();
+    // }
+    // if (argc == 9) {
+    //     hashDemo9();
+    // }
     
 
     // heapDemo
-    // if (argc == 1) {
-    //     heapDemo1();
-    // }
-    // if (argc == 2) {
-    //     heapDemo2();
-    // }
+    if (argc == 1) {
+        heapDemo1();
+    }
+    if (argc == 2) {
+        heapDemo2();
+    }
+    if (argc == 3) {
+        heapDemo3();
+    }
+    if (argc == 4) {
+        heapDemo4();
+    }
 
     //huffMan demo
     // if (argc == 1) {

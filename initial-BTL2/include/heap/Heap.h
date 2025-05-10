@@ -75,7 +75,7 @@ public:
     static void free(Heap<T> *pHeap){
         for(int idx=0; idx < pHeap->count; idx++) delete pHeap->elements[idx];
     }
-    
+    void heapsort(XArrayList<T>& arrayList);
     
 private:
     bool aLTb(T& a, T& b){
@@ -99,7 +99,7 @@ private:
     void removeInternalData();
     void copyFrom(const Heap<T>& heap);
 
-    void heapsort(XArrayList<T>& arrayList);
+    
     
 //////////////////////////////////////////////////////////////////////
 ////////////////////////  INNER CLASSES DEFNITION ////////////////////
@@ -435,4 +435,22 @@ void Heap<T>::copyFrom(const Heap<T>& heap){
     }
 }
 
+template<class T>
+void Heap<T>::heapsort(XArrayList<T>& arrayList) {
+    // Step 1: Clear the heap
+    this->clear();
+
+    // Step 2: Insert elements from arrayList into the heap
+    for (int i = 0; i < arrayList.size(); i++) {
+        this->push(arrayList.get(i));
+    }
+
+    // Step 3: Extract elements from the heap and store them back into arrayList
+    for (int i = 0; i < arrayList.size(); i++) {
+        arrayList.get(i) = this->pop();
+
+        // Print the current state of the arrayList after each extraction
+        arrayList.println();
+    }
+}
 #endif

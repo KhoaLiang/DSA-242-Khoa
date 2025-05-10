@@ -121,5 +121,22 @@
      cout << endl;
  }
 
+ 	
+void heapDemo4(){
+    XArrayList<int> list;
+    int values[] = {3, 1, 4, 1, 5, 9, 2, 6, 5};
+    for (int v : values) {
+        list.add(v);
+    }
+
+    cout << "Before heapsort: ";
+    list.println();
+
+    Heap<int> heap;
+    heap.heapsort(list);
+
+    cout << "After heapsort: ";
+    list.println();
+}
  
  
