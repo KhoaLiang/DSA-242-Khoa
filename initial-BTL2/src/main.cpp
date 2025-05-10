@@ -7,10 +7,11 @@
 #include "test/tc_compressor.h"
 #include "test/tc_dlinkedlist.h"
 #include "test/tc_xarraylist.h"
+#include "test/tc_inventory.h"
 
 using namespace std;
 
-void (*func_ptr[29])() = {
+void (*func_ptr[35])() = {
     hashDemo1,
     hashDemo2,
     hashDemo3,
@@ -39,7 +40,13 @@ void (*func_ptr[29])() = {
     xlistDemo1,
     xlistDemo2,
     xlistDemo3,
-    xlistDemo4
+    xlistDemo4,
+    tc_inventory1001,
+    tc_inventory1002,
+    tc_inventory1003,
+    tc_inventory1004,
+    tc_inventory1005,
+    tc_inventory1006
 };
 
 void run(int func_idx)
@@ -126,6 +133,26 @@ int main(int argc, char **argv)
     if (argc == 4) {
         heapDemo4();
     }
+
+    // inventoryDemo
+    // if (argc == 1) {
+    //     tc_inventory1001();
+    // }
+    // if (argc == 2) {
+    //     tc_inventory1002();
+    // }
+    // if (argc == 3) {
+    //     tc_inventory1003();
+    // }
+    // if (argc == 4) {
+    //     tc_inventory1004();
+    // }
+    // if (argc == 5) {
+    //     tc_inventory1005();
+    // }
+    // if (argc == 6) {
+    //     tc_inventory1006();
+    // }
 
     //huffMan demo
     // if (argc == 1) {
