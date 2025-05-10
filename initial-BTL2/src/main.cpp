@@ -121,18 +121,18 @@ int main(int argc, char **argv)
     
 
     // heapDemo
-    if (argc == 1) {
-        heapDemo1();
-    }
-    if (argc == 2) {
-        heapDemo2();
-    }
-    if (argc == 3) {
-        heapDemo3();
-    }
-    if (argc == 4) {
-        heapDemo4();
-    }
+    // if (argc == 1) {
+    //     heapDemo1();
+    // }
+    // if (argc == 2) {
+    //     heapDemo2();
+    // }
+    // if (argc == 3) {
+    //     heapDemo3();
+    // }
+    // if (argc == 4) {
+    //     heapDemo4();
+    // }
 
     // inventoryDemo
     // if (argc == 1) {
@@ -155,12 +155,28 @@ int main(int argc, char **argv)
     // }
 
     //huffMan demo
+    if (argc == 1) {
+        tc_huffman1001();
+    }
+    if (argc == 2) {
+        tc_huffman1002();
+    }
+    if (argc == 3) {
+        tc_huffman1003();
+    }
+    if (argc == 4) {
+        tc_huffman1004();
+    }
+    if (argc == 5) {
+        tc_huffman1005();
+    }
+
+    //tc compressor
     // if (argc == 1) {
-    //     tc_huffman1001();
-    // }
-    // if (argc == 2) {
     //     tc_compressor1001();
     // }
-    
+    // if (argc == 2) {
+    //     tc_compressor1002();
+    // }
     return 0;
 }
