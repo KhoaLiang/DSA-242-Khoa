@@ -303,8 +303,21 @@ int Heap<T>::size(){
 }
 
 template<class T>
-void Heap<T>::heapify(T array[], int size){
-    for(int idx=0; idx < size; idx++) push(array[idx]);
+void Heap<T>::heapify(T array[], int size) {
+    // Step 1: Clear the current heap
+    this->clear();
+
+    // Step 2: Copy elements from the input array into the heap
+    ensureCapacity(size);
+    for (int i = 0; i < size; i++) {
+        this->elements[i] = array[i];
+    }
+    this->count = size;
+
+    // Step 3: Perform bottom-up heap construction
+    for (int i = (size / 2) - 1; i >= 0; i--) {
+        reheapDown(i);
+    }
 }
 
 template<class T>
