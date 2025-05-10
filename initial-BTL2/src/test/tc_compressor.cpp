@@ -17,16 +17,17 @@ int charHashFunc(char& key, int tablesize) {
 void tc_huffman1001() {
     XArrayList<pair<char, int>> symbolFreqs;
     symbolFreqs.add(make_pair('A', 5));
-    
+    symbolFreqs.add(make_pair('B', 3));
+
     HTree tree;
     tree.build(symbolFreqs);
-    
+
     xMap<char, string> codeTable(&charHashFunc);
     tree.generateCodes(codeTable);
-    
+
     string codeA = codeTable.get('A');
     cout << "Code for A: " << codeA << endl;
-    
+
     string decoded = tree.decode(codeA);
     cout << "Decoded string: " << decoded << endl;
 }
@@ -74,10 +75,10 @@ void tc_huffman1004() {
     XArrayList<pair<char, int>> symbolFreqs;
     symbolFreqs.add(make_pair('M', 3));
     symbolFreqs.add(make_pair('N', 5));
-    
+
     HTree tree;
     tree.build(symbolFreqs);
-    
+
     xMap<char, string> codeTable(&charHashFunc);
     tree.generateCodes(codeTable);
 
@@ -85,6 +86,7 @@ void tc_huffman1004() {
     cout << "Decoded string from invalid code: " << decoded << endl;
 }
 
+	
 void tc_huffman1005() {
     XArrayList<pair<char, int>> symbolFreqs;
     const string symbols = "ABCDEFGHIJ";
@@ -92,13 +94,13 @@ void tc_huffman1005() {
     for (int i = 0; i < n; ++i) {
         symbolFreqs.add(make_pair(symbols[i], (i + 1) * 2));
     }
-    
+
     HTree tree;
     tree.build(symbolFreqs);
-    
+
     xMap<char, string> codeTable(&charHashFunc);
     tree.generateCodes(codeTable);
-    
+
     for (char ch : symbols) {
         string code = codeTable.get(ch);
         string decoded = tree.decode(code);

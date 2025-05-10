@@ -103,8 +103,10 @@ void HuffmanTree<treeOrder>::deleteSubtree(HuffmanNode* node) {
 template <int treeOrder>
 void HuffmanTree<treeOrder>::traverse(HuffmanNode* node, const std::string& code, xMap<char, std::string>& table) {
     if (node->children.empty()) {
-        // Leaf node: Add the character and its code to the table
-        table.put(node->symbol, code);
+        // Skip dummy nodes
+        if (node->symbol != '\0') {
+            table.put(node->symbol, code);
+        }
         return;
     }
 
@@ -132,6 +134,9 @@ void HuffmanTree<treeOrder>::build(XArrayList<pair<char, int>>& symbolsFreqs) {
         heap.push(new HuffmanNode('\0', 0)); // Dummy node with frequency 0
     }
 
+    // Debug: Print dummy node count
+    // std::cout << "Added " << dummiesNeeded << " dummy nodes." << std::endl;
+
     // Step 3: Build the tree
     while (heap.size() > 1) {
         XArrayList<HuffmanNode*> children;
@@ -151,15 +156,34 @@ void HuffmanTree<treeOrder>::build(XArrayList<pair<char, int>>& symbolsFreqs) {
 
     // Step 4: The last remaining node becomes the root
     root = heap.pop();
+
+    // Debug: Print the root frequency
+    // if (root != nullptr) {
+    //     std::cout << "Huffman tree built successfully. Root frequency: " << root->freq << std::endl;
+    // } else {
+    //     std::cerr << "Error: Huffman tree root is null." << std::endl;
+    // }
 }
 
 template <int treeOrder>
 void HuffmanTree<treeOrder>::generateCodes(xMap<char, std::string>& table) {
     if (root != nullptr) {
-        traverse(root, "", table);
+        // Handle single-node tree
+        if (root->children.empty()) {
+            table.put(root->symbol, ""); // Single symbol gets an empty code
+        } else {
+            traverse(root, "", table);
+        }
+
+        // Debug: Print the generated codes
+        // DLinkedList<char> keys = table.keys();
+        // for (char key : keys) {
+        //     std::cout << "Generated code for '" << key << "': " << table.get(key) << std::endl;
+        // }
+    } else {
+        std::cerr << "Error: Huffman tree root is null. Tree might not be built correctly." << std::endl;
     }
 }
-
 template <int treeOrder>
 std::string HuffmanTree<treeOrder>::decode(const std::string& huffmanCode) {
     std::string result;
@@ -179,14 +203,21 @@ std::string HuffmanTree<treeOrder>::decode(const std::string& huffmanCode) {
 
         // If we reach a leaf node, append the symbol to the result
         if (currentNode->children.empty()) {
+            if (currentNode->symbol == '\0') {
+                return "\x00"; // Invalid code (dummy node)
+            }
             result += currentNode->symbol;
             currentNode = root; // Reset to root for the next character
         }
     }
 
+    // If the traversal ends without reaching a leaf node, the code is invalid
+    if (currentNode != root) {
+        return "\x00"; // Invalid code
+    }
+
     return result;
 }
-
 template <int treeOrder>
 InventoryCompressor<treeOrder>::InventoryCompressor(InventoryManager *manager)
 {
